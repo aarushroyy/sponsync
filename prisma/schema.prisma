@@ -1,0 +1,202 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+
+model CollegeUser {
+  id                 String             @id @default(uuid())
+  email              String             @unique
+  password           String
+  name               String
+  collegeName        String
+  eventName          String
+  phone              String
+  isVerified         Boolean            @default(false)
+  onboardingComplete Boolean            @default(false)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  CollegeOnboarding  CollegeOnboarding?
+}
+
+model SpocUser {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  firstName  String
+  lastName   String
+  phone      String
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model AdminUser {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  name       String
+  phone      String?
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum Region {
+  NORTH
+  SOUTH
+  EAST
+  WEST
+}
+
+enum PackageTier {
+  BRONZE
+  SILVER
+  GOLD
+}
+
+enum MetricType {
+  SIGNUPS
+  BANNERS
+  SURVEYS
+  CLICKS
+}
+
+enum FeatureType {
+  ANNOUNCEMENT
+  STANDEES
+  BACKDROP
+  TITLE_SPONSOR
+}
+
+model CollegeOnboarding {
+  id              String          @id @default(uuid())
+  collegeId       String          @unique
+  region          Region
+  eventType       String
+  posterUrl       String?         // Added to store Supabase URL
+  packageConfigs  PackageConfig[]
+  college         CollegeUser     @relation(fields: [collegeId], references: [id])
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model PackageConfig {
+  id               String           @id @default(uuid())
+  tier             PackageTier
+  onboardingId     String
+  collegeOnboarding CollegeOnboarding @relation(fields: [onboardingId], references: [id], onDelete: Cascade)
+  metrics          PackageMetric[]  
+  features         PackageFeature[] 
+
+  @@unique([onboardingId, tier])
+}
+
+model PackageMetric {
+  id               String        @id @default(uuid())
+  type             MetricType
+  enabled          Boolean       @default(false)
+  minValue         Int?
+  maxValue         Int?
+  packageConfig    PackageConfig @relation(fields: [packageConfigId], references: [id], onDelete: Cascade)
+  packageConfigId  String
+
+  @@unique([packageConfigId, type])
+}
+
+model PackageFeature {
+  id               String        @id @default(uuid())
+  type             FeatureType
+  enabled          Boolean       @default(false)
+  packageConfig    PackageConfig @relation(fields: [packageConfigId], references: [id], onDelete: Cascade)
+  packageConfigId  String
+
+  @@unique([packageConfigId, type])
+}
+
+model CompanyUser {
+  id            String           @id @default(uuid())
+  email         String           @unique
+  password      String
+  personName    String
+  position      String
+  companyName   String
+  phone         String
+  isVerified    Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  campaigns     CompanyCampaign[]
+}
+
+enum CampaignPlan {
+  QUARTERLY
+  HALF_YEARLY
+  YEARLY
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model CompanyCampaign {
+  id              String         @id @default(uuid())
+  companyId       String
+  company         CompanyUser    @relation(fields: [companyId], references: [id])
+  name            String
+  plan            CampaignPlan
+  region          Region
+  eventTypes      String[]       // Array of event types
+  bundleSize      Int            // Number of events in the bundle
+  status          CampaignStatus @default(DRAFT)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  metrics         CampaignMetric[]
+  features        CampaignFeature[]
+  bundles         CampaignBundle[]
+}
+
+model CampaignMetric {
+  id            String         @id @default(uuid())
+  type          MetricType
+  minValue      Int?
+  maxValue      Int?
+  campaignId    String
+  campaign      CompanyCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, type])
+}
+
+model CampaignFeature {
+  id            String         @id @default(uuid())
+  type          FeatureType
+  enabled       Boolean        @default(false)
+  campaignId    String
+  campaign      CompanyCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, type])
+}
+
+model CampaignBundle {
+  id            String         @id @default(uuid())
+  name          String
+  campaignId    String
+  campaign      CompanyCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  collegeIds    String[]       // IDs of colleges in this bundle
+  status        String         @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
