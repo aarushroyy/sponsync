@@ -28,18 +28,7 @@ model CollegeUser {
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   CollegeOnboarding  CollegeOnboarding?
-}
-
-model SpocUser {
-  id         String   @id @default(uuid())
-  email      String   @unique
-  password   String
-  firstName  String
-  lastName   String
-  phone      String
-  isVerified Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  assignedSpocs      SpocUser[]         
 }
 
 model AdminUser {
@@ -199,4 +188,34 @@ model CampaignBundle {
   status        String         @default("PENDING") // PENDING, ACCEPTED, REJECTED
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+}
+
+model SpocUser {
+  id                 String         @id @default(uuid())
+  email              String         @unique
+  password           String
+  firstName          String
+  lastName           String
+  phone              String
+  collegeRollNumber  String?        
+  idCardUrl          String?        
+  isVerified         Boolean        @default(false)
+  isApproved         Boolean        @default(false) // Added for admin approval
+  assignedCollegeId  String?        
+  assignedCollege    CollegeUser?   @relation(fields: [assignedCollegeId], references: [id])
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  assignments        SpocAssignment[]
+}
+
+model SpocAssignment {
+  id                 String         @id @default(uuid())
+  spocId             String
+  spoc               SpocUser       @relation(fields: [spocId], references: [id])
+  sponsorshipId      String         
+  status             String         @default("PENDING") // PENDING, ACTIVE, COMPLETED
+  verificationPhotos String[]       
+  report             String?        
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
 }

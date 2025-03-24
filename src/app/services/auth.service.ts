@@ -196,6 +196,8 @@ export const collegeAuthService = {
     }
   };
 
+// Update to src/app/services/auth.service.ts - spocAuthService section
+
 export const spocAuthService = {
   async register(data: {
     email: string;
@@ -203,6 +205,8 @@ export const spocAuthService = {
     firstName: string;
     lastName: string;
     phone: string;
+    collegeRollNumber: string;
+    idCardUrl: string;
   }) {
     try {
       const hashedPassword = await hashPassword(data.password);
@@ -213,6 +217,10 @@ export const spocAuthService = {
           firstName: data.firstName,
           lastName: data.lastName,
           phone: data.phone,
+          collegeRollNumber: data.collegeRollNumber,
+          idCardUrl: data.idCardUrl,
+          isVerified: false,
+          isApproved: false // SPOCs start as not approved
         },
       });
 
@@ -220,6 +228,7 @@ export const spocAuthService = {
         await sendVerificationEmail(user.id, user.email);
       } catch (emailError) {
         console.error('Email sending failed:', emailError);
+        // Continue even if email fails
       }
 
       return user;
@@ -230,6 +239,9 @@ export const spocAuthService = {
   },
 
   async login(email: string, password: string) {
+    if (!email || !password) {
+      throw new Error('Email and password are required');
+    }
     const user = await prisma.spocUser.findUnique({
       where: { email },
       select: {
@@ -238,7 +250,9 @@ export const spocAuthService = {
         password: true,
         firstName: true,
         lastName: true,
-        isVerified: true
+        isVerified: true,
+        isApproved: true,
+        assignedCollegeId: true
       }
     });
 
@@ -247,19 +261,29 @@ export const spocAuthService = {
     if (!user.isVerified) throw new Error('Email not verified');
 
     const { 
+      id, 
+      email: userEmail, 
+      firstName, 
+      lastName, 
+      isVerified, 
+      isApproved,
+      assignedCollegeId
+    } = user;
+    
+    return { 
+      user: { 
         id, 
         email: userEmail, 
         firstName, 
         lastName, 
-        isVerified 
-      } = user;
-      
-      return { 
-        user: { id, email: userEmail, firstName, lastName, isVerified },
-        token: generateToken(user.id)
-      };
-    }
-  };
+        isVerified, 
+        isApproved,
+        assignedCollegeId
+      },
+      token: generateToken(user.id)
+    };
+  }
+};
 
 export const adminAuthService = {
   async register(data: {
@@ -327,9 +351,9 @@ export const verificationService = {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
       
-      const updateUser = async (model: 'companyUser' | 'collegeUser' | 'spocUser' | 'adminUser') => {
+      const updateUser = async (model: keyof Pick<typeof prisma, 'companyUser' | 'collegeUser' | 'spocUser' | 'adminUser'>) => {
         try {
-          await prisma[model].update({
+          await (prisma[model] as typeof prisma.companyUser).update({
             where: { id: decoded.userId },
             data: { isVerified: true },
           });
