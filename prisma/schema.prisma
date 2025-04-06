@@ -75,6 +75,7 @@ model CollegeOnboarding {
   region          Region
   eventType       String
   posterUrl       String?         // Added to store Supabase URL
+  totalBudgetGoal Int?
   packageConfigs  PackageConfig[]
   college         CollegeUser     @relation(fields: [collegeId], references: [id])
   createdAt       DateTime        @default(now())
@@ -88,6 +89,7 @@ model PackageConfig {
   collegeOnboarding CollegeOnboarding @relation(fields: [onboardingId], references: [id], onDelete: Cascade)
   metrics          PackageMetric[]  
   features         PackageFeature[] 
+  estimatedAmount  Int?
 
   @@unique([onboardingId, tier])
 }
@@ -150,6 +152,7 @@ model CompanyCampaign {
   region          Region
   eventTypes      String[]       // Array of event types
   bundleSize      Int            // Number of events in the bundle
+  budgetLimit     Int?
   status          CampaignStatus @default(DRAFT)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -185,6 +188,7 @@ model CampaignBundle {
   campaignId    String
   campaign      CompanyCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   collegeIds    String[]       // IDs of colleges in this bundle
+  totalValue    Int?
   status        String         @default("PENDING") // PENDING, ACCEPTED, REJECTED
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
