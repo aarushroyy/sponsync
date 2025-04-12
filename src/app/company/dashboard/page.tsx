@@ -245,6 +245,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, AlertCircle, PlusCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import CollegeDetailModal from "@/components/college/CollegeDetailModal";
+import { PackageTier, MetricType, FeatureType } from '@/app/types/package';
 
 interface CollegeEvent {
   id: string;
@@ -256,15 +257,15 @@ interface CollegeEvent {
     eventName: string;
   };
   packageConfigs: Array<{
-    tier: string;
+    tier: PackageTier;
     metrics: Array<{
-      type: string;
+      type: MetricType;
       enabled: boolean;
       minValue: number | null;
       maxValue: number | null;
     }>;
     features: Array<{
-      type: string;
+      type: FeatureType;
       enabled: boolean;
     }>;
     estimatedAmount?: number;
@@ -551,13 +552,34 @@ export default function CompanyDashboardPage() {
       </div>
 
       {/* College Detail Modal */}
-      {selectedCollege && (
+      {/* {selectedCollege && (
         <CollegeDetailModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          college={selectedCollege as any}
+          college={selectedCollege as CollegeEvent}
         />
-      )}
+      )} */}
+      {selectedCollege && (
+  <CollegeDetailModal
+    isOpen={isModalOpen}
+    onClose={() => setIsModalOpen(false)}
+    college={{
+      ...selectedCollege,
+      packageConfigs: selectedCollege.packageConfigs.map(pkg => ({
+        ...pkg,
+        tier: pkg.tier as PackageTier,
+        metrics: pkg.metrics.map(m => ({
+          ...m,
+          type: m.type as MetricType
+        })),
+        features: pkg.features.map(f => ({
+          ...f,
+          type: f.type as FeatureType
+        }))
+      }))
+    }}
+  />
+)}
     </div>
   );
 }

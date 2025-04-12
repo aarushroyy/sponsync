@@ -126,6 +126,9 @@ export default function CollegeDashboardPage() {
   }
 
   const dashboardData: CollegeDashboardData = data;
+  console.log("dash data",dashboardData);
+  console.log("college:",dashboardData.college);
+
 
   return (
     <div className="min-h-screen p-6 bg-gray-50">

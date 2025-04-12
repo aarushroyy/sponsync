@@ -57,16 +57,21 @@ enum PackageTier {
 
 enum MetricType {
   SIGNUPS
-  BANNERS
-  SURVEYS
-  CLICKS
+  MARKETING_BANNERS
+  DIGITAL_MARKETING_VIEWS
+  CUSTOMER_SURVEYS
+  KEYNOTE_SPEAKING
+  ENGAGEMENT_ACTIVITY
+  ANNOUNCEMENTS
+  LOGO_ON_POSTERS
 }
 
 enum FeatureType {
-  ANNOUNCEMENT
+  STALLS
+  TITLE_RIGHTS
+  MAIN_STAGE_BACKDROP
   STANDEES
-  BACKDROP
-  TITLE_SPONSOR
+  OTHER
 }
 
 model CollegeOnboarding {
@@ -100,6 +105,7 @@ model PackageMetric {
   enabled          Boolean       @default(false)
   minValue         Int?
   maxValue         Int?
+  rangeOption      String? 
   packageConfig    PackageConfig @relation(fields: [packageConfigId], references: [id], onDelete: Cascade)
   packageConfigId  String
 
@@ -110,6 +116,7 @@ model PackageFeature {
   id               String        @id @default(uuid())
   type             FeatureType
   enabled          Boolean       @default(false)
+  valueOption      String?   
   packageConfig    PackageConfig @relation(fields: [packageConfigId], references: [id], onDelete: Cascade)
   packageConfigId  String
 
@@ -166,6 +173,7 @@ model CampaignMetric {
   type          MetricType
   minValue      Int?
   maxValue      Int?
+  rangeOption   String?     
   campaignId    String
   campaign      CompanyCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
@@ -176,6 +184,7 @@ model CampaignFeature {
   id            String         @id @default(uuid())
   type          FeatureType
   enabled       Boolean        @default(false)
+  valueOption   String? 
   campaignId    String
   campaign      CompanyCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 

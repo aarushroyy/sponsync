@@ -1,4 +1,3 @@
-// // app/api/auth/college/onboard/route.ts
 // import { NextResponse } from 'next/server';
 // import prisma from '@/app/lib/prisma';
 // import { verifyToken } from '@/app/lib/jwt';
@@ -14,6 +13,7 @@
 // interface PackageConfigData {
 //   metrics: Record<MetricType, MetricConfig>;
 //   features: Record<FeatureType, boolean>;
+//   estimatedAmount: string; // New field for sponsorship amount
 // }
 
 // interface PackageConfigs {
@@ -41,7 +41,7 @@
 
 //     const regionRaw = formData.get('region');
 //     const eventType = formData.get('eventType') as string | null;
-//     // Remove packageTier validation since it's not needed
+//     const totalBudgetGoal = formData.get('totalBudgetGoal') as string | null;
 //     const posterFile = formData.get('poster') as File | null;
 
 //     // Validate required fields
@@ -88,13 +88,14 @@
 //       }
 //     }
 
-//     // First, create the base onboarding record
+//     // First, create the base onboarding record with the new totalBudgetGoal field
 //     const onboarding = await prisma.collegeOnboarding.create({
 //       data: {
 //         collegeId: decoded.userId,
 //         region,
 //         eventType,
 //         posterUrl,
+//         totalBudgetGoal: totalBudgetGoal ? parseInt(totalBudgetGoal) : null,
 //       },
 //     });
 
@@ -102,11 +103,12 @@
 //     for (const [tierKey, config] of Object.entries(packageConfigs)) {
 //       const tier = tierKey as PackageTier;
       
-//       // Create the package config
+//       // Create the package config with estimated amount
 //       const packageConfig = await prisma.packageConfig.create({
 //         data: {
 //           tier,
 //           onboardingId: onboarding.id,
+//           estimatedAmount: config.estimatedAmount ? parseInt(config.estimatedAmount) : null,
 //         },
 //       });
 
@@ -178,12 +180,18 @@ interface MetricConfig {
   enabled: boolean;
   min: string;
   max: string;
+  rangeOption?: string;
+}
+
+interface FeatureConfig {
+  enabled: boolean;
+  valueOption?: string;
 }
 
 interface PackageConfigData {
   metrics: Record<MetricType, MetricConfig>;
-  features: Record<FeatureType, boolean>;
-  estimatedAmount: string; // New field for sponsorship amount
+  features: Record<FeatureType, FeatureConfig>;
+  estimatedAmount: string;
 }
 
 interface PackageConfigs {
@@ -253,8 +261,6 @@ export async function POST(request: Request): Promise<NextResponse> {
       
       if (!posterUrl) {
         console.error('Upload failed, but continuing with onboarding');
-        // Instead of failing, we'll continue without the poster
-        // return new NextResponse(JSON.stringify({ message: 'Failed to upload poster' }), { status: 500 });
       }
     }
 
@@ -285,24 +291,47 @@ export async function POST(request: Request): Promise<NextResponse> {
       // Create metrics for this package config
       for (const [metricTypeKey, metricData] of Object.entries(config.metrics)) {
         const metricType = metricTypeKey as MetricType;
-        await prisma.packageMetric.create({
-          data: {
-            type: metricType,
-            enabled: metricData.enabled,
-            minValue: metricData.enabled ? parseInt(metricData.min) : null,
-            maxValue: metricData.enabled ? parseInt(metricData.max) : null,
-            packageConfigId: packageConfig.id,
-          },
-        });
+        if (metricData.enabled) {
+          // Convert min/max values based on range option if present
+          let minValue: number | null = null;
+          let maxValue: number | null = null;
+          
+          if (metricData.min) minValue = parseInt(metricData.min);
+          if (metricData.max) maxValue = parseInt(metricData.max);
+          
+          await prisma.packageMetric.create({
+            data: {
+              type: metricType,
+              enabled: metricData.enabled,
+              minValue,
+              maxValue,
+              rangeOption: metricData.rangeOption || null,
+              packageConfigId: packageConfig.id,
+            },
+          });
+        } else {
+          // Create disabled metric record
+          await prisma.packageMetric.create({
+            data: {
+              type: metricType,
+              enabled: false,
+              minValue: null,
+              maxValue: null,
+              rangeOption: null,
+              packageConfigId: packageConfig.id,
+            },
+          });
+        }
       }
 
       // Create features for this package config
-      for (const [featureTypeKey, enabled] of Object.entries(config.features)) {
+      for (const [featureTypeKey, featureData] of Object.entries(config.features)) {
         const featureType = featureTypeKey as FeatureType;
         await prisma.packageFeature.create({
           data: {
             type: featureType,
-            enabled: Boolean(enabled),
+            enabled: featureData.enabled,
+            valueOption: featureData.valueOption || null,
             packageConfigId: packageConfig.id,
           },
         });
@@ -337,3 +366,4 @@ export async function POST(request: Request): Promise<NextResponse> {
       
     return new NextResponse(JSON.stringify({ message: errorMessage }), { status: 500 });
   }
+}
