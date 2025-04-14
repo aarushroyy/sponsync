@@ -125,7 +125,20 @@ export default function CollegeDashboardPage() {
     );
   }
 
-  const dashboardData: CollegeDashboardData = data;
+  console.log("Raw data:", data);
+  if (!data) {
+    return <p>No data available</p>;
+  }
+
+  // const dashboardData: CollegeDashboardData = data;
+
+  const dashboardData: CollegeDashboardData = data || { 
+    college: null, 
+    packages: [], 
+    sponsorships: [], 
+    stats: { totalRaised: 0, activeSponsors: 0, pendingSponsors: 0, completedSponsors: 0 } 
+  };
+  
   console.log("dash data",dashboardData);
   console.log("college:",dashboardData.college);
 
