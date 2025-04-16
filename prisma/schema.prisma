@@ -228,7 +228,8 @@ model SpocAssignment {
   sponsorshipId      String         
   status             String         @default("PENDING") // PENDING, ACTIVE, COMPLETED
   verificationPhotos String[]       
-  report             String?        
+  report             String?       
+  metricsProgress    Json[]         // Store metrics progress as JSON array of {type, currentValue} 
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 }
