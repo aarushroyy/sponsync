@@ -55,17 +55,17 @@ export async function POST(request: Request) {
     }
 
     // Update the assignment with the new photo URLs
-    const updatedAssignment = await prisma.spocAssignment.update({
-      where: { id: assignmentId },
-      data: {
-        // Merge existing photos with new ones
-        verificationPhotos: {
-          push: photoUrls,
-        },
-        // If this is the first photo, update the status to ACTIVE if it was PENDING
-        status: assignment.status === 'PENDING' ? 'ACTIVE' : assignment.status,
-      },
-    });
+    // const updatedAssignment = await prisma.spocAssignment.update({
+    //   where: { id: assignmentId },
+    //   data: {
+    //     // Merge existing photos with new ones
+    //     verificationPhotos: {
+    //       push: photoUrls,
+    //     },
+    //     // If this is the first photo, update the status to ACTIVE if it was PENDING
+    //     status: assignment.status === 'PENDING' ? 'ACTIVE' : assignment.status,
+    //   },
+    // });
 
     return NextResponse.json({ 
       message: 'Photos uploaded successfully',

@@ -4,11 +4,11 @@ import prisma from '@/app/lib/prisma';
 import { verifyToken } from '@/app/lib/jwt';
 // import nodemailer from 'nodemailer';
 
-interface RouteContext {
-  params: {
-    bundleId: string;
-  };
-}
+// interface RouteContext {
+//   params: {
+//     bundleId: string;
+//   };
+// }
 
 // Set up nodemailer (configure with your actual SMTP settings in production)
 // const transporter = nodemailer.createTransport({
@@ -53,7 +53,7 @@ interface RouteContext {
 
 export async function POST(
   request: Request,
-  { params }: RouteContext
+  { params }: { params: { bundleId: string } }  // Change here: inline the type
 ): Promise<NextResponse> {
   const { bundleId } = params;
 
