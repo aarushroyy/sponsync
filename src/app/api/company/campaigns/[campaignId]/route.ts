@@ -3,18 +3,24 @@ import { NextResponse } from 'next/server';
 import prisma from '@/app/lib/prisma';
 import { verifyToken } from '@/app/lib/jwt';
 
-interface RouteContext {
-  params: {
-    campaignId: string;
-  };
-}
+// interface RouteContext {
+//   params: {
+//     campaignId: string;
+//   };
+// }
+
+// export async function GET(
+//   request: Request,
+//   { params }: RouteContext
+// ): Promise<NextResponse> {
+//   const { campaignId } = params;
 
 export async function GET(
   request: Request,
-  { params }: RouteContext
+  context: { params: { campaignId: string } }
 ): Promise<NextResponse> {
-  const { campaignId } = params;
-
+  const { campaignId } = context.params;
+  
   // Verify JWT from Authorization header
   const authHeader = request.headers.get('Authorization');
   if (!authHeader) {

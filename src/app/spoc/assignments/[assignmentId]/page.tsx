@@ -11,15 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, AlertCircle, ArrowLeft, Upload, Camera, FileText, CheckCircle, BarChart, Users } from "lucide-react";
+import { Loader2, AlertCircle, ArrowLeft, Camera, CheckCircle, BarChart, Users, X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogHeader } from "@/components/ui/dialog";
 
-interface MetricUpdate {
-  type: string;
-  currentValue: number;
-}
 
 interface AssignmentDetails {
   id: string;
@@ -94,7 +90,7 @@ export default function SpocAssignmentPage() {
     if (data?.assignment) {
       // Initialize metrics updates
       const updates: Record<string, number> = {};
-      data.assignment.metrics.forEach((metric: any) => {
+      data.assignment.metrics.forEach((metric: {type: string; current: number}) => {
         updates[metric.type] = metric.current;
       });
       setMetricsUpdates(updates);

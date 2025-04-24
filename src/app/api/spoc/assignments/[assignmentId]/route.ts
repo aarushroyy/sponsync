@@ -1,4 +1,4 @@
-// src/app/api/spoc/assignments/[assignmentId]/route.ts
+// src/app/api/spoc/assignments/[assignmentId]/upload-photos/route.ts - enhanced version
 import { NextResponse } from 'next/server';
 import prisma from '@/app/lib/prisma';
 import { verifyToken } from '@/app/lib/jwt';
@@ -9,7 +9,7 @@ interface RouteContext {
   };
 }
 
-export async function GET(
+export async function POST(
   request: Request,
   { params }: RouteContext
 ): Promise<NextResponse> {
@@ -44,95 +44,79 @@ export async function GET(
       return NextResponse.json({ message: 'Assignment not found or unauthorized' }, { status: 404 });
     }
 
-    // Get bundle details
-    const bundle = await prisma.campaignBundle.findUnique({
-      where: { id: assignment.sponsorshipId },
-      include: {
-        campaign: {
-          include: {
-            company: {
-              select: {
-                companyName: true,
-              }
-            },
-            metrics: true,
-            features: true,
-          }
-        }
-      }
-    });
-
-    if (!bundle) {
-      return NextResponse.json({ message: 'Sponsorship details not found' }, { status: 404 });
+    // Check if the assignment is already completed
+    if (assignment.status === 'COMPLETED') {
+      return NextResponse.json({ message: 'Cannot upload photos for a completed assignment' }, { status: 400 });
     }
 
-    // Get college details
-    const collegeId = bundle.collegeIds[0]; // Using first college for simplicity
-    const college = collegeId 
-      ? await prisma.collegeUser.findUnique({
-          where: { id: collegeId },
-          select: {
-            collegeName: true,
-            eventName: true,
-            CollegeOnboarding: {
-              select: {
-                region: true,
-                eventType: true,
-              }
-            }
-          }
-        })
-      : null;
+    // Parse form data
+    const formData = await request.formData();
+    const photos = formData.getAll('photos') as File[];
 
-    // Process metrics with target and current values
-    const metricsWithProgress = bundle.campaign.metrics.map(metric => {
-      // Find current value from assignment progress data if available
-      let currentValue = 0;
-      if (assignment.metricsProgress) {
-        const progressEntry = assignment.metricsProgress.find(
-          (p: any) => p.type === metric.type
-        );
-        if (progressEntry) {
-          currentValue = progressEntry.currentValue;
-        }
-      }
+    if (!photos || photos.length === 0) {
+      return NextResponse.json({ message: 'No photos provided' }, { status: 400 });
+    }
 
-      return {
-        type: metric.type,
-        target: metric.maxValue || 0,
-        current: currentValue,
-      };
+    // Upload photos to storage service
+    const photoUrls = await uploadPhotosToStorage(photos, assignmentId);
+
+    if (photoUrls.length === 0) {
+      return NextResponse.json({ message: 'Failed to upload photos' }, { status: 500 });
+    }
+
+    // Update the assignment with the new photo URLs
+    const existingPhotos = assignment.verificationPhotos || [];
+    const updatedAssignment = await prisma.spocAssignment.update({
+      where: { id: assignmentId },
+      data: {
+        verificationPhotos: [...existingPhotos, ...photoUrls],
+        status: assignment.status === 'PENDING' ? 'ACTIVE' : assignment.status,
+        updatedAt: new Date(),
+      },
     });
 
-    return NextResponse.json({
-      assignment: {
-        id: assignment.id,
-        sponsorshipId: assignment.sponsorshipId,
-        status: assignment.status,
-        verificationPhotos: assignment.verificationPhotos || [],
-        report: assignment.report,
-        createdAt: assignment.createdAt,
-        updatedAt: assignment.updatedAt,
-        companyName: bundle.campaign.company.companyName,
-        campaignName: bundle.campaign.name,
-        collegeName: college?.collegeName || 'Unknown College',
-        eventName: college?.eventName || 'Unknown Event',
-        eventType: college?.CollegeOnboarding?.eventType || 'Unknown',
-        region: college?.CollegeOnboarding?.region || 'NORTH',
-        metrics: metricsWithProgress,
-        features: bundle.campaign.features
-          .filter(f => f.enabled)
-          .map(f => ({
-            type: f.type,
-            valueOption: f.valueOption,
-          }))
-      }
+    // Check if assignment is now complete
+    let isCompleted = false;
+    if (updatedAssignment.report && updatedAssignment.verificationPhotos.length > 0) {
+      await prisma.spocAssignment.update({
+        where: { id: assignmentId },
+        data: {
+          status: 'COMPLETED',
+          updatedAt: new Date(),
+        },
+      });
+      isCompleted = true;
+    }
+
+    return NextResponse.json({ 
+      message: 'Photos uploaded successfully',
+      photoUrls,
+      status: isCompleted ? 'COMPLETED' : updatedAssignment.status,
     });
   } catch (error: unknown) {
-    console.error('Error fetching assignment details:', error);
+    console.error('Error uploading photos:', error);
     return NextResponse.json({ 
-      message: error instanceof Error ? error.message : 'Failed to fetch assignment details', 
+      message: error instanceof Error ? error.message : 'Failed to upload photos', 
       status: 'error' 
     }, { status: 500 });
+  }
+}
+
+// Helper function to upload photos to storage
+// This is a placeholder - you would replace this with actual storage logic
+async function uploadPhotosToStorage(photos: File[], assignmentId: string): Promise<string[]> {
+  try {
+    // This is a placeholder implementation
+    // In a real application, you would upload the photos to a storage service like AWS S3, Supabase, etc.
+    
+    // For now, we'll just simulate successful uploads with placeholder URLs
+    const urls = photos.map((_, index) => 
+      `https://example.com/verification-photos/${assignmentId}/${Date.now()}-${index}.jpg`
+    );
+    
+    return urls;
+  } catch (error) {
+    console.error('Error in uploadPhotosToStorage:', error);
+    return [];
   }
 }

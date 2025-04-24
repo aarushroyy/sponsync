@@ -1,13 +1,16 @@
-// src/app/api/spoc/assignments/[assignmentId]/update-metrics/route.ts
+// src/app/api/spoc/assignments/[assignmentId]/update-metrics/route.ts - enhanced version
 import { NextResponse } from 'next/server';
 import prisma from '@/app/lib/prisma';
 import { verifyToken } from '@/app/lib/jwt';
+import { Prisma } from '@prisma/client';
+
 
 interface RouteContext {
   params: {
     assignmentId: string;
   };
 }
+
 
 interface MetricUpdate {
   type: string;
@@ -43,9 +46,6 @@ export async function POST(
         id: assignmentId,
         spocId: decoded.userId,
       },
-      include: {
-        spoc: true,
-      }
     });
 
     if (!assignment) {
@@ -60,7 +60,7 @@ export async function POST(
     }
 
     // Validate metrics format
-    const validMetrics = metrics.every((metric: any) => 
+    const validMetrics = metrics.every((metric: {type: string; currentValue: number}) => 
       typeof metric.type === 'string' && 
       typeof metric.currentValue === 'number' && 
       metric.currentValue >= 0
@@ -71,7 +71,11 @@ export async function POST(
     }
 
     // Normalize metric updates
-    const metricsUpdates: MetricUpdate[] = metrics.map((metric: any) => ({
+    // const metricsUpdates: MetricUpdate[] = metrics.map((metric: any) => ({
+    //   type: metric.type,
+    //   currentValue: Math.max(0, Number(metric.currentValue)),
+    // }));
+    const metricsUpdates: MetricUpdate[] = metrics.map((metric: { type: string; currentValue: number | string }) => ({
       type: metric.type,
       currentValue: Math.max(0, Number(metric.currentValue)),
     }));
@@ -80,7 +84,7 @@ export async function POST(
     const updatedAssignment = await prisma.spocAssignment.update({
       where: { id: assignmentId },
       data: {
-        metricsProgress: metricsUpdates,
+        metricsProgress: metricsUpdates as unknown as Prisma.InputJsonValue[],
         status: assignment.status === 'PENDING' ? 'ACTIVE' : assignment.status,
         updatedAt: new Date(),
       },
@@ -99,6 +103,7 @@ export async function POST(
         where: { id: assignmentId },
         data: {
           status: 'COMPLETED',
+          updatedAt: new Date(),
         },
       });
       isCompleted = true;

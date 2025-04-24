@@ -1,4 +1,4 @@
-// src/app/api/spoc/assignments/route.ts
+// src/app/api/spoc/assignments/route.ts - updated version
 import { NextResponse } from 'next/server';
 import prisma from '@/app/lib/prisma';
 import { verifyToken } from '@/app/lib/jwt';
@@ -46,26 +46,51 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({ message: 'SPOC not found' }, { status: 404 });
     }
 
-    // Verify SPOC is approved
+    // If SPOC is not approved, only return basic details
     if (!spoc.isApproved) {
       return NextResponse.json({ 
-        message: 'Your account is pending approval',
-        approvalStatus: 'PENDING'
+        spoc: {
+          id: spoc.id,
+          firstName: spoc.firstName,
+          lastName: spoc.lastName,
+          email: spoc.email,
+          isApproved: spoc.isApproved,
+        },
+        assignedCollege: null,
+        assignments: [],
+        stats: {
+          pendingCount: 0,
+          activeCount: 0,
+          completedCount: 0,
+          totalEarnings: 0,
+        }
+      });
+    }
+
+    // If SPOC is not assigned to a college yet
+    if (!spoc.assignedCollegeId) {
+      return NextResponse.json({
+        spoc: {
+          id: spoc.id,
+          firstName: spoc.firstName,
+          lastName: spoc.lastName,
+          email: spoc.email,
+          isApproved: spoc.isApproved,
+        },
+        assignedCollege: null,
+        assignments: [],
+        stats: {
+          pendingCount: 0,
+          activeCount: 0,
+          completedCount: 0,
+          totalEarnings: 0,
+        }
       });
     }
 
     // Get all assignments for this SPOC
     const assignments = await prisma.spocAssignment.findMany({
       where: { spocId: spoc.id },
-      include: {
-        spoc: {
-          select: {
-            firstName: true,
-            lastName: true,
-            email: true,
-          }
-        }
-      },
       orderBy: { createdAt: 'desc' }
     });
 
@@ -113,22 +138,27 @@ export async function GET(request: Request): Promise<NextResponse> {
 
         // Process metrics with target and current values
         const metricsWithProgress = bundle.campaign.metrics.map(metric => {
+          // Default current value
+          let currentValue = 0;
+          
+          // Check if we have metrics progress data
+          const progressEntry = assignment.metricsProgress.find(
+            (p) => typeof p === 'object' && p !== null && 'type' in p && p.type === metric.type
+          );
+          
+          if (progressEntry && 
+              typeof progressEntry === 'object' && 
+              'currentValue' in progressEntry && 
+              typeof progressEntry.currentValue === 'number') {
+            currentValue = progressEntry.currentValue;
+          }
+
           return {
             type: metric.type,
             target: metric.maxValue || 0,
-            current: 0, // Default to 0, will be updated from assignment data if available
+            current: currentValue,
           };
         });
-
-        // Update current values from assignment data if available
-        if (assignment.metricsProgress) {
-          for (const progress of assignment.metricsProgress) {
-            const metricIndex = metricsWithProgress.findIndex(m => m.type === progress.type);
-            if (metricIndex >= 0) {
-              metricsWithProgress[metricIndex].current = progress.currentValue;
-            }
-          }
-        }
 
         return {
           id: assignment.id,
