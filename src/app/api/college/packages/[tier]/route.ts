@@ -4,16 +4,10 @@ import prisma from '@/app/lib/prisma';
 import { verifyToken } from '@/app/lib/jwt';
 import { PackageTier } from '@prisma/client';
 
-interface RouteContext {
-  params: {
-    tier: string;
-  };
-}
-
 export async function GET(
   request: Request,
-  { params }: RouteContext
-): Promise<NextResponse> {
+  { params }: { params: { tier: string } }
+) {
   const { tier } = params;
 
   // Validate tier
@@ -91,8 +85,8 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: RouteContext
-): Promise<NextResponse> {
+  { params }: { params: { tier: string } }
+) {
   const { tier } = params;
 
   // Validate tier
