@@ -64,6 +64,7 @@ export const companyAuthService = {
           position: data.position,
           companyName: data.companyName,
           phone: data.phone,
+          isVerified: true
         },
       });
 
@@ -144,6 +145,7 @@ export const collegeAuthService = {
           collegeName: data.collegeName,
           eventName: data.eventName,
           phone: data.phone,
+          isVerified: true
         },
       });
 
