@@ -7,11 +7,10 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, AlertCircle, CheckCircle, X, UserCheck, BuildingIcon, Users, DollarSign, BarChart4 } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle, X, UserCheck, BuildingIcon, Users, DollarSign, ArrowRightCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-//import Image from "next/image";
 
 interface SpocUser {
   id: string;
@@ -63,6 +62,17 @@ interface Campaign {
   createdAt: string;
 }
 
+interface Bundle {
+  id: string;
+  name: string;
+  status: string;
+  campaign: {
+    name: string;
+    company: string;
+  };
+  hasSpoc: boolean;
+}
+
 interface AdminDashboardData {
   pendingSpocs: SpocUser[];
   colleges: CollegeUser[];
@@ -86,6 +96,8 @@ export default function AdminDashboardPage() {
   const [assignDialogOpen, setAssignDialogOpen] = useState(false);
   const [selectedCollege, setSelectedCollege] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
+  const [bundles, setBundles] = useState<Bundle[]>([]);
+  const [bundlesLoading, setBundlesLoading] = useState(false);
 
   const fetchDashboardData = async () => {
     const token = localStorage.getItem("token");
@@ -111,6 +123,42 @@ export default function AdminDashboardPage() {
     queryKey: ["adminDashboard"],
     queryFn: fetchDashboardData,
   });
+
+  // Fetch bundles that need SPOC assignment
+  const fetchBundles = async () => {
+    setBundlesLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Not authenticated");
+      }
+
+      const res = await fetch("/api/admin/bundles", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Failed to load bundles");
+      }
+
+      const bundleData = await res.json();
+      setBundles(bundleData.bundles || []);
+    } catch (error) {
+      console.error("Error fetching bundles:", error);
+      toast.error("Failed to load pending bundles");
+    } finally {
+      setBundlesLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "bundles") {
+      fetchBundles();
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -143,6 +191,9 @@ export default function AdminDashboardPage() {
       
       toast.success("SPOC approved successfully");
       refetch();
+      if (idCardPreviewOpen) {
+        setIdCardPreviewOpen(false);
+      }
     } catch (error) {
       console.error("Error approving SPOC:", error);
       toast.error(error instanceof Error ? error.message : "Failed to approve SPOC");
@@ -174,6 +225,9 @@ export default function AdminDashboardPage() {
       
       toast.success("SPOC rejected successfully");
       refetch();
+      if (idCardPreviewOpen) {
+        setIdCardPreviewOpen(false);
+      }
     } catch (error) {
       console.error("Error rejecting SPOC:", error);
       toast.error(error instanceof Error ? error.message : "Failed to reject SPOC");
@@ -244,15 +298,18 @@ export default function AdminDashboardPage() {
 
   const dashboardData: AdminDashboardData = data;
 
+  // Count bundles needing SPOC assignment
+  //const bundlesNeedingAssignment = bundles.filter(b => !b.hasSpoc).length;
+
   return (
     <div className="min-h-screen p-6 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <p className="text-gray-600">Manage colleges, companies, and SPOCs</p>
+          <p className="text-gray-600">Manage colleges, companies, SPOCs and sponsorships</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center space-x-2">
@@ -298,20 +355,6 @@ export default function AdminDashboardPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center space-x-2">
-                <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
-                  <BarChart4 className="h-5 w-5 text-purple-500" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Active Campaigns</p>
-                  <h3 className="text-2xl font-bold">{dashboardData.stats.activeCampaigns}</h3>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-2">
                 <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
                   <DollarSign className="h-5 w-5 text-yellow-500" />
                 </div>
@@ -322,26 +365,13 @@ export default function AdminDashboardPage() {
               </div>
             </CardContent>
           </Card>
-          
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-2">
-                <div className="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center">
-                  <UserCheck className="h-5 w-5 text-orange-500" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">SPOCs</p>
-                  <h3 className="text-2xl font-bold">{dashboardData.stats.totalSpocs}</h3>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="mb-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="spocs">SPOCs Approval</TabsTrigger>
+            <TabsTrigger value="bundles">Bundles</TabsTrigger>
             <TabsTrigger value="colleges">Colleges</TabsTrigger>
             <TabsTrigger value="companies">Companies</TabsTrigger>
             <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
@@ -400,6 +430,56 @@ export default function AdminDashboardPage() {
                       View All ({dashboardData.pendingSpocs.length})
                     </Button>
                   </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Bundle Assignment Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Bundles Pending SPOC Assignment</CardTitle>
+                <CardDescription>
+                  Sponsorship bundles waiting for SPOC verification
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {bundlesLoading ? (
+                  <div className="flex justify-center py-4">
+                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                  </div>
+                ) : (
+                  <>
+                    {!bundles || bundles.length === 0 ? (
+                      <div className="text-center py-4">
+                        <p className="text-gray-500">No bundles pending SPOC assignment</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {bundles.filter(b => !b.hasSpoc).slice(0, 3).map((bundle) => (
+                          <div key={bundle.id} className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">{bundle.name}</p>
+                              <p className="text-sm text-gray-500">{bundle.campaign.company} - {bundle.campaign.name}</p>
+                            </div>
+                            <Button 
+                              size="sm" 
+                              onClick={() => router.push(`/admin/bundles/${bundle.id}/assign-spoc`)}
+                            >
+                              Assign SPOC
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {bundles && bundles.filter(b => !b.hasSpoc).length > 3 && (
+                      <div className="mt-4 text-center">
+                        <Button variant="outline" onClick={() => setActiveTab("bundles")}>
+                          View All ({bundles.filter(b => !b.hasSpoc).length})
+                        </Button>
+                      </div>
+                    )}
+                  </>
                 )}
               </CardContent>
             </Card>
@@ -530,8 +610,86 @@ export default function AdminDashboardPage() {
               <CardContent>
                 {/* This would be a list of already approved SPOCs that need to be assigned */}
                 <div className="text-center py-4">
-                  <p className="text-gray-500">Approved SPOCs would be listed here</p>
+                  <p className="text-gray-500">Manage SPOC assignments from the Bundles tab</p>
+                  <Button 
+                    variant="outline" 
+                    className="mt-2"
+                    onClick={() => setActiveTab("bundles")}
+                  >
+                    Go to Bundles
+                  </Button>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="bundles" className="space-y-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Bundles Requiring SPOC Assignment</CardTitle>
+                  <CardDescription>
+                    Assign SPOCs to verify sponsorship bundles
+                  </CardDescription>
+                </div>
+                <Button onClick={() => fetchBundles()}>
+                  Refresh Bundles
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {bundlesLoading ? (
+                  <div className="flex justify-center py-4">
+                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                  </div>
+                ) : (
+                  <>
+                    {!bundles || bundles.length === 0 ? (
+                      <div className="text-center py-4">
+                        <p className="text-gray-500">No bundles pending SPOC assignment</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {bundles.map((bundle) => (
+                          <Card key={bundle.id} className={bundle.hasSpoc ? "border-green-500/20" : "border-yellow-500/20"}>
+                            <CardHeader className="flex flex-row items-start justify-between space-y-0">
+                              <div>
+                                <CardTitle>{bundle.name}</CardTitle>
+                                <p className="text-sm text-gray-500">{bundle.campaign.name} - {bundle.campaign.company}</p>
+                              </div>
+                              <Badge
+                                className={
+                                  bundle.hasSpoc ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                                }
+                              >
+                                {bundle.hasSpoc ? "SPOC Assigned" : "Needs Assignment"}
+                              </Badge>
+                            </CardHeader>
+                            <CardContent>
+                              <div className="flex justify-end">
+                                <Button
+                                  variant={bundle.hasSpoc ? "outline" : "default"}
+                                  size="sm"
+                                  className="mt-2"
+                                  onClick={() => router.push(`/admin/bundles/${bundle.id}/assign-spoc`)}
+                                  disabled={bundle.hasSpoc}
+                                >
+                                  {bundle.hasSpoc ? (
+                                    "Already Assigned"
+                                  ) : (
+                                    <>
+                                      <UserCheck className="h-4 w-4 mr-2" />
+                                      Assign SPOC
+                                    </>
+                                  )}
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -689,8 +847,10 @@ export default function AdminDashboardPage() {
                           <Button 
                             size="sm" 
                             variant="outline"
+                            className="flex items-center"
                             onClick={() => router.push(`/admin/campaigns/${campaign.id}`)}
                           >
+                            <ArrowRightCircle className="mr-2 h-4 w-4" />
                             View Details
                           </Button>
                         </div>
@@ -799,7 +959,7 @@ export default function AdminDashboardPage() {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
+        </Dialog>
+      </div>
+    );
+  }

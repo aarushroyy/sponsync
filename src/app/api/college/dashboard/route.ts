@@ -105,8 +105,8 @@ export async function GET(request: Request): Promise<NextResponse> {
       // Find metrics for this company
       const metrics = bundle.campaign.metrics.map(metric => ({
         type: metric.type,
-        target: metric.maxValue || 0,
-        current: Math.floor(Math.random() * (metric.maxValue || 100)), // Simulated progress
+  status: 'In Progress',
+  description: metric.rangeOption || `${metric.minValue || 0} - ${metric.maxValue || 'max'}`
       }));
 
       // Calculate start and end dates based on campaign plan

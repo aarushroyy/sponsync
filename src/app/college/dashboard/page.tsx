@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+// import { Progress } from "@/components/ui/progress";
 import { Loader2, AlertCircle, CheckCircle, FileBarChart, Users, Award, Layers } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -41,8 +41,8 @@ interface Sponsorship {
   endDate: string;
   metrics: {
     type: string;
-    target: number;
-    current: number;
+    status: string;
+    description?: string;
   }[];
 }
 
@@ -291,12 +291,13 @@ export default function CollegeDashboardPage() {
                         <div className="space-y-2">
                           {sponsorship.metrics.map((metric, idx) => (
                             <div key={idx}>
-                              <div className="flex justify-between items-center mb-1">
-                                <span className="text-sm">{metric.type}</span>
-                                <span className="text-sm font-medium">{metric.current} / {metric.target}</span>
-                              </div>
-                              <Progress value={(metric.current / metric.target) * 100} className="h-2" />
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-sm">{metric.type.replace(/_/g, ' ')}</span>
+                              <Badge variant="outline" className="text-xs">
+                                {metric.status || 'Pending'}
+                              </Badge>
                             </div>
+                          </div>
                           ))}
                         </div>
                       </div>
@@ -361,12 +362,13 @@ export default function CollegeDashboardPage() {
                             <div className="space-y-2">
                               {sponsorship.metrics.map((metric, idx) => (
                                 <div key={idx}>
-                                  <div className="flex justify-between items-center mb-1">
-                                    <span className="text-sm">{metric.type}</span>
-                                    <span className="text-sm font-medium">{metric.current} / {metric.target}</span>
-                                  </div>
-                                  <Progress value={(metric.current / metric.target) * 100} className="h-2" />
+                                <div className="flex justify-between items-center mb-1">
+                                  <span className="text-sm">{metric.type.replace(/_/g, ' ')}</span>
+                                  <Badge variant="outline" className="text-xs">
+                                    {metric.status || 'Pending'}
+                                  </Badge>
                                 </div>
+                              </div>
                               ))}
                             </div>
                           </div>

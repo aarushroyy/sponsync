@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+// import { Progress } from "@/components/ui/progress";
 import { Loader2, AlertCircle, ArrowLeft, Mail, Phone, Building, User } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 //import { Separator } from "@/components/ui/separator";
@@ -33,9 +33,9 @@ interface Sponsorship {
   };
   metrics: {
     type: string;
-    target: number;
-    current: number;
-    percentage: number;
+    status: string;
+    description?: string;
+    target?: string | number;
   }[];
   features: {
     type: string;
@@ -266,28 +266,29 @@ export default function SponsorshipDetailsPage() {
                 <CardDescription>Update the progress for each metric</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {sponsorship.metrics.map((metric) => (
-                  <div key={metric.type}>
-                    <div className="flex justify-between items-center mb-2">
-                      <Label htmlFor={`metric-${metric.type}`} className="font-medium">
-                        {metric.type.replace(/_/g, ' ')}
-                      </Label>
-                      <div className="text-sm">
-                        <span className="font-medium">{metric.current}</span>
-                        <span className="text-gray-500"> / {metric.target}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex space-x-4 items-center">
-                      <div className="flex-grow">
-                        <Progress value={(metric.current / metric.target) * 100} className="h-2" />
-                      </div>
-                      
-            
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
+  {sponsorship.metrics.map((metric) => (
+    <div key={metric.type}>
+      <div className="flex justify-between items-center mb-2">
+        <Label htmlFor={`metric-${metric.type}`} className="font-medium">
+          {metric.type.replace(/_/g, ' ')}
+        </Label>
+        <Badge variant={
+          metric.status === 'Completed' ? 'secondary' : 
+          metric.status === 'In Progress' ? 'default' : 
+          'outline'
+        }>
+          {metric.status || 'Pending'}
+        </Badge>
+      </div>
+      
+      <div className="p-3 bg-gray-50 rounded-md">
+        <div className="text-sm text-gray-600">
+          {metric.description || `Requirement: ${metric.target || 'Not specified'}`}
+        </div>
+      </div>
+    </div>
+  ))}
+</CardContent>
               {/* <CardFooter>
                 <Button 
                   onClick={handleUpdateMetrics}

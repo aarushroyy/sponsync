@@ -92,18 +92,27 @@ export async function GET(
     }
 
     // Calculate progress for each metric (simulated for now)
-    const metricsWithProgress = bundle.campaign.metrics.map(metric => {
-      // Current progress (simulated)
-      const target = metric.maxValue || 0;
-      const current = Math.floor(Math.random() * target);
+    // const metricsWithProgress = bundle.campaign.metrics.map(metric => {
+    //   // Current progress (simulated)
+    //   const target = metric.maxValue || 0;
+    //   const current = Math.floor(Math.random() * target);
       
-      return {
-        type: metric.type,
-        target,
-        current,
-        percentage: target > 0 ? (current / target) * 100 : 0,
-      };
-    });
+    //   return {
+    //     type: metric.type,
+    //     target,
+    //     current,
+    //     percentage: target > 0 ? (current / target) * 100 : 0,
+    //   };
+    // });
+
+    // Create metrics with appropriate status and description
+const metricsWithProgress = bundle.campaign.metrics.map(metric => {
+  return {
+    type: metric.type,
+    status: 'In Progress', // Could be 'Pending', 'In Progress', 'Completed'
+    description: metric.rangeOption || `${metric.minValue || 0} - ${metric.maxValue || 'max'}`,
+  };
+});
 
     // Calculate college's portion of the total value
     const collegeCount = bundle.collegeIds.length;
