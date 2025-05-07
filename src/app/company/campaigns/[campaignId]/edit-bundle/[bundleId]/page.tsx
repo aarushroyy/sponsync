@@ -198,8 +198,13 @@ const [eventsCountFilter, setEventsCountFilter] = useState("");
       
       // Calculate initial metrics and budget
       updateMetricsAndBudget(data.bundle.collegeDetails || []);
+      setRemainingSlots(data.campaign.bundleSize - selectedColleges.length);
+
     }
   }, [data]);
+
+  const [remainingSlots, setRemainingSlots] = useState(0);
+
 
   // Update metrics and budget when selected colleges change
   useEffect(() => {
@@ -248,12 +253,18 @@ const [eventsCountFilter, setEventsCountFilter] = useState("");
   // Handle adding a college to the bundle
   const handleAddCollege = (college: College) => {
     // Add college to selected list
+
+    if (campaign?.bundleSize && selectedColleges.length >= campaign.bundleSize) {
+      toast.error(`You cannot add more than ${campaign.bundleSize} colleges to this bundle.`);
+      return;
+    }
     setSelectedColleges(prev => [...prev, { ...college, selected: true }]);
     
     // Remove college from available list
     setAvailableColleges(prev => prev.filter(c => c.id !== college.id));
     
     setIsAddCollegeOpen(false);
+    setRemainingSlots(prev => prev - 1);
   };
 
   // Handle removing a college from the bundle
@@ -338,14 +349,19 @@ const [eventsCountFilter, setEventsCountFilter] = useState("");
             </p>
           </div>
           
-          <Button 
-            variant="outline" 
-            onClick={() => setIsAddCollegeOpen(true)}
-            disabled={availableColleges.length === 0}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add College
-          </Button>
+          <div className="mb-6 flex justify-end space-x-4 items-center">
+  <p className="text-sm text-gray-600">
+    Remaining slots: {remainingSlots} of {campaign?.bundleSize}
+  </p>
+  <Button 
+    variant="outline" 
+    onClick={() => setIsAddCollegeOpen(true)}
+    disabled={availableColleges.length === 0 || remainingSlots <= 0}
+  >
+    <Plus className="mr-2 h-4 w-4" />
+    Add College
+  </Button>
+</div>
         </div>
 
         {/* Metrics and Budget Summary */}

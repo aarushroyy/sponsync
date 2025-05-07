@@ -21,6 +21,20 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 
   try {
+
+    const company = await prisma.companyUser.findUnique({
+      where: { id: decoded.userId },
+      select: {
+        id: true,
+        companyName: true,
+        personName: true
+      }
+    });
+  
+    if (!company) {
+      return NextResponse.json({ message: 'Company not found' }, { status: 404 });
+    }
+    
     // Get all college posters
     const collegeOnboardings = await prisma.collegeOnboarding.findMany({
       select: {

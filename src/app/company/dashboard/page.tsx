@@ -290,6 +290,7 @@ interface Campaign {
 export default function CompanyDashboardPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("colleges");
+  const [companyName, setCompanyName] = useState("");
   const [selectedCollege, setSelectedCollege] = useState<CollegeEvent | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -318,6 +319,13 @@ export default function CompanyDashboardPage() {
     queryFn: fetchDashboardData,
   });
 
+  useEffect(() => {
+    // Add this code to extract the company name when data is loaded
+    if (data && data.userProfile && data.userProfile.companyName) {
+      setCompanyName(data.userProfile.companyName);
+    }
+  }, [data]);
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -362,8 +370,10 @@ export default function CompanyDashboardPage() {
     <div className="min-h-screen p-6 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold">Company Dashboard</h1>
-          <p className="text-gray-600">Manage your campaigns and discover college events</p>
+        <h1 className="text-3xl font-bold">
+            {companyName ? `${companyName}'s Dashboard` : "Company Dashboard"}
+          </h1>
+         <p className="text-gray-600">Manage your campaigns and discover college events</p>
         </div>
 
         {/* Quick Stats Section */}

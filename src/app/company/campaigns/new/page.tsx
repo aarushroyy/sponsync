@@ -783,12 +783,7 @@ const BundleDisplay = ({ bundle, metrics, onSelect }: {
               <span className="font-medium">Total Budget:</span>
               <span className="font-bold text-lg">₹{totalBudget.toLocaleString()}</span>
             </div>
-            {bundle.roi && (
-              <div className="flex justify-between items-center mt-1">
-                <span className="text-sm text-gray-600">ROI Score:</span>
-                <Badge variant="outline" className="bg-blue-50">{bundle.roi.toFixed(2)}</Badge>
-              </div>
-            )}
+            
           </div>
         )}
       </CardContent>
@@ -816,8 +811,7 @@ export default function StartCampaignPage() {
     region: "NORTH" as Region,
     eventTypes: [] as string[],
     bundleSize: 1,
-    budgetLimit: 100000,
-    optimizationCriteria: "balanced"
+    budgetLimit: 50000,
   });
   const [metrics, setMetrics] = useState<MetricInput[]>([]);
   const [features, setFeatures] = useState<FeatureInput[]>([]);
@@ -833,12 +827,45 @@ export default function StartCampaignPage() {
     { value: "Hackathon", label: "Hackathon" }
   ];
 
-  const optimizationOptions = [
-    { value: "balanced", label: "Balanced (Metrics & Cost)" },
-    { value: "metrics", label: "Maximize Metrics" },
-    { value: "cost", label: "Minimize Cost" },
-    { value: "roi", label: "Best Value (ROI)" }
-  ];
+  // Define the budget ranges
+const budgetRanges = [
+  // 0-50K in 5K increments
+  { value: 5000, label: "₹5,000" },
+  { value: 10000, label: "₹10,000" },
+  { value: 15000, label: "₹15,000" },
+  { value: 20000, label: "₹20,000" },
+  { value: 25000, label: "₹25,000" },
+  { value: 30000, label: "₹30,000" },
+  { value: 35000, label: "₹35,000" },
+  { value: 40000, label: "₹40,000" },
+  { value: 45000, label: "₹45,000" },
+  { value: 50000, label: "₹50,000" },
+  
+  // 50K-1L in 10K increments
+  { value: 60000, label: "₹60,000" },
+  { value: 70000, label: "₹70,000" },
+  { value: 80000, label: "₹80,000" },
+  { value: 90000, label: "₹90,000" },
+  { value: 100000, label: "₹1,00,000" },
+  
+  // 1L+ in 50K increments
+  { value: 150000, label: "₹1,50,000" },
+  { value: 200000, label: "₹2,00,000" },
+  { value: 250000, label: "₹2,50,000" },
+  { value: 300000, label: "₹3,00,000" },
+  { value: 350000, label: "₹3,50,000" },
+  { value: 400000, label: "₹4,00,000" },
+  { value: 450000, label: "₹4,50,000" },
+  { value: 500000, label: "₹5,00,000" },
+  { value: 1000000, label: "₹10,00,000" },
+];
+
+  // const optimizationOptions = [
+  //   { value: "balanced", label: "Balanced (Metrics & Cost)" },
+  //   { value: "metrics", label: "Maximize Metrics" },
+  //   { value: "cost", label: "Minimize Cost" },
+  //   { value: "roi", label: "Best Value (ROI)" }
+  // ];
 
   // Check for pre-selected college from localStorage
   useEffect(() => {
@@ -924,9 +951,28 @@ export default function StartCampaignPage() {
   
   const addMetric = () => {
     // Select a default metric type
-    const defaultType = MetricType.SIGNUPS;
+    if (metrics.length >= Object.values(MetricType).length) {
+      toast.error("You've added all possible metric types.");
+      return;
+    }
+
+    const usedTypes = new Set(metrics.map(m => m.type));
+  const availableTypes = Object.values(MetricType).filter(type => !usedTypes.has(type));
+  
+  if (availableTypes.length === 0) {
+    toast.error("You've added all possible metric types.");
+    return;
+  }
+  
+  // Use the first available type
+  const defaultType = availableTypes[0];
+  
+  // Get default range option
+  const defaultRangeOption = MetricRangeOptions[defaultType][0];
+
+    // const defaultType = MetricType.SIGNUPS;
     // Get default range option
-    const defaultRangeOption = MetricRangeOptions[defaultType][0];
+    // const defaultRangeOption = MetricRangeOptions[defaultType][0];
     
     // Parse min/max from range option
     const [minStr, maxStr] = defaultRangeOption.split('-');
@@ -946,6 +992,14 @@ export default function StartCampaignPage() {
     
     if (field === 'type') {
       // Update type
+
+      const typeExists = metrics.some((m, i) => i !== index && m.type === value);
+    
+    if (typeExists) {
+      toast.error(`Metric type "${value}" is already added.`);
+      return;
+    }
+
       newMetrics[index].type = value as MetricType;
       
       // Reset range option to first option for this type
@@ -1282,33 +1336,25 @@ export default function StartCampaignPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="budgetLimit">Budget Limit (₹) *</Label>
-                <Input
-                  id="budgetLimit"
-                  type="number"
-                  min="0"
-                  value={formData.budgetLimit}
-                  onChange={(e) => setFormData({ ...formData, budgetLimit: Number(e.target.value) })}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="optimization">Optimization Strategy</Label>
                 <Select
-                  value={formData.optimizationCriteria}
-                  onValueChange={(v) => setFormData({ ...formData, optimizationCriteria: v })}
-                >
-                  <SelectTrigger id="optimization">
-                    <SelectValue placeholder="Select strategy" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {optimizationOptions.map(option => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                    value={formData.budgetLimit.toString()}
+                    onValueChange={(value) => setFormData({ ...formData, budgetLimit: parseInt(value) })}
+                  >
+                    <SelectTrigger id="budgetLimit" className="w-full">
+                      <SelectValue placeholder="Select budget limit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {budgetRanges.map((range) => (
+                        <SelectItem key={range.value} value={range.value.toString()}>
+                          {range.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-gray-500">Select your campaign budget limit</p>
+                </div>
+
+              
             </div>
 
             {/* Event Types */}
@@ -1335,14 +1381,25 @@ export default function StartCampaignPage() {
 
             {/* Bundle Size */}
             <div className="space-y-2">
-              <Label htmlFor="bundle-size">Bundle Size (Number of Events) *</Label>
+              <Label htmlFor="bundle-size">Bundle Size (Number of Events you want to sponsor) *</Label>
               <Input
                 id="bundle-size"
                 type="number"
                 min="1"
+                max="10"
                 value={formData.bundleSize}
-                onChange={(e) => setFormData({ ...formData, bundleSize: Number(e.target.value) })}
+                onChange={(e) => {
+                  // Add validation to limit the value to 10
+                  const value = parseInt(e.target.value);
+                  if (value > 10) {
+                    toast.error("Maximum bundle size is 10 events");
+                    setFormData({ ...formData, bundleSize: 10 });
+                  } else {
+                    setFormData({ ...formData, bundleSize: value });
+                  }
+                }}
               />
+              <p className="text-xs text-gray-500">Maximum of 10 events per bundle</p>
             </div>
 
             {/* Metrics Section */}
