@@ -595,7 +595,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Loader2, Upload, CheckCircle, ArrowRight, ArrowLeft } from "lucide-react";
@@ -605,6 +605,8 @@ import { PACKAGE_CONFIGS } from "@/app/lib/packageConfig";
 import { PackageTier, MetricType, FeatureType, MetricRangeOptions, FeatureValueOptions } from '@/app/types/package';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { PackageAmountOptions } from "@/app/types/package";
+import { toast } from "sonner";
 
 export default function CollegeOnboarding() {
   const router = useRouter();
@@ -614,41 +616,44 @@ export default function CollegeOnboarding() {
   // Initialize package data for each tier
   const initializePackageData = (tier: PackageTier) => {
     const config = PACKAGE_CONFIGS[tier];
+
+    const defaultAmount = tier === PackageTier.GOLD 
+    ? PackageAmountOptions.GOLD[0]
+    : tier === PackageTier.SILVER 
+      ? PackageAmountOptions.SILVER[0]
+      : PackageAmountOptions.BRONZE[0];
+
     return {
-      metrics: Object.fromEntries(
-        Object.entries(config.metrics).map(([type, value]) => [
-          type,
-          {
-            enabled: value.enabled || false,
-            min: value.defaultMin?.toString() || "",
-            max: value.defaultMax?.toString() || "",
-            rangeOption: value.defaultRangeOption || ""
-          }
-        ])
-      ),
-      features: Object.fromEntries(
-        Object.entries(config.features).map(([type, value]) => [
-          type,
-          {
-            enabled: value.enabled || false,
-            valueOption: value.defaultValueOption || ""
-          }
-        ])
-      ),
-      estimatedAmount: tier === PackageTier.GOLD 
-        ? "30000" 
-        : tier === PackageTier.SILVER 
-          ? "15000" 
-          : "7500",
-    };
+    metrics: Object.fromEntries(
+      Object.entries(config.metrics).map(([type, value]) => [
+        type,
+        {
+          enabled: value.enabled || false,
+          min: value.defaultMin?.toString() || "",
+          max: value.defaultMax?.toString() || "",
+          rangeOption: value.defaultRangeOption || ""
+        }
+      ])
+    ),
+    features: Object.fromEntries(
+      Object.entries(config.features).map(([type, value]) => [
+        type,
+        {
+          enabled: value.enabled || false,
+          valueOption: value.defaultValueOption || ""
+        }
+      ])
+    ),
+    estimatedAmount: defaultAmount,
   };
+};
 
   const [formData, setFormData] = useState({
     region: "",
     eventType: "",
     poster: null as File | null,
     packageTier: PackageTier.SILVER,
-    totalBudgetGoal: "50000", // Default total budget goal
+    // totalBudgetGoal: "50000", // Default total budget goal
     packageConfigs: {
       [PackageTier.BRONZE]: initializePackageData(PackageTier.BRONZE),
       [PackageTier.SILVER]: initializePackageData(PackageTier.SILVER),
@@ -755,12 +760,12 @@ export default function CollegeOnboarding() {
     }));
   };
 
-  const handleTotalBudgetChange = (amount: string) => {
-    setFormData(prev => ({
-      ...prev,
-      totalBudgetGoal: amount
-    }));
-  };
+  // const handleTotalBudgetChange = (amount: string) => {
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     totalBudgetGoal: amount
+  //   }));
+  // };
 
   const handlePosterUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -785,7 +790,7 @@ export default function CollegeOnboarding() {
 
   const validateCurrentStep = (): boolean => {
     if (currentStep === 1) {
-      return !!formData.region && !!formData.eventType && !!formData.totalBudgetGoal;
+      return !!formData.region && !!formData.eventType;
     } else if (currentStep === 2) {
       return !!formData.poster;
     }
@@ -798,7 +803,6 @@ export default function CollegeOnboarding() {
       const formDataToSend = new FormData();
       formDataToSend.append("region", data.region);
       formDataToSend.append("eventType", data.eventType);
-      formDataToSend.append("totalBudgetGoal", data.totalBudgetGoal);
       
       if (data.poster) {
         formDataToSend.append("poster", data.poster);
@@ -838,30 +842,52 @@ export default function CollegeOnboarding() {
   //   }
   // };
 
-  const handleNextButtonClick = () => {
-    if (validateCurrentStep()) {
-      nextStep();
+  // const handleNextButtonClick = () => {
+  //   if (validateCurrentStep()) {
+  //     nextStep();
+  //   }
+  // };
+
+  const validatePackageAmounts = (): boolean => {
+    const bronzeAmount = parseInt(formData.packageConfigs[PackageTier.BRONZE].estimatedAmount) || 0;
+    const silverAmount = parseInt(formData.packageConfigs[PackageTier.SILVER].estimatedAmount) || 0;
+    const goldAmount = parseInt(formData.packageConfigs[PackageTier.GOLD].estimatedAmount) || 0;
+    
+
+    
+    // Check Bronze < Silver < Gold
+    if (bronzeAmount >= silverAmount) {
+      toast.error("Bronze package amount must be less than Silver package amount");
+      return false;
     }
+    
+    if (silverAmount >= goldAmount) {
+      toast.error("Silver package amount must be less than Gold package amount");
+      return false;
+    }
+    
+    return true;
   };
   
   // Form submission should only happen when explicitly clicking the final step's submit button
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    // Only submit if we're on the final step
     if (currentStep === totalSteps) {
-      mutation.mutate(formData);
+      if (validateCurrentStep() && validatePackageAmounts()) {
+        mutation.mutate(formData);
+      }
     }
   };
 
   // Calculate total estimated amount from all selected packages
-  const calculateTotalEstimated = () => {
-    const activePackages = Object.values(PackageTier);
-    return activePackages.reduce((total, tier) => {
-      const packageData = formData.packageConfigs[tier];
-      return total + (parseInt(packageData.estimatedAmount) || 0);
-    }, 0);
-  };
+  // const calculateTotalEstimated = () => {
+  //   const activePackages = Object.values(PackageTier);
+  //   return activePackages.reduce((total, tier) => {
+  //     const packageData = formData.packageConfigs[tier];
+  //     return total + (parseInt(packageData.estimatedAmount) || 0);
+  //   }, 0);
+  // };
 
   
 
@@ -1080,23 +1106,7 @@ export default function CollegeOnboarding() {
                     </div>
                   </div>
                   
-                  {/* Total Budget Goal */}
-                  <div className="mt-6">
-                    <Label htmlFor="totalBudgetGoal">Total Sponsorship Goal (₹)</Label>
-                    <div className="mt-2">
-                      <Input
-                        id="totalBudgetGoal"
-                        type="number"
-                        min="0"
-                        value={formData.totalBudgetGoal}
-                        onChange={(e) => handleTotalBudgetChange(e.target.value)}
-                        className="w-full focus-visible:ring-orange-500"
-                      />
-                    </div>
-                    <p className="text-sm text-gray-500 mt-2">
-                      Your total estimated amount from all packages: ₹{calculateTotalEstimated().toLocaleString()}
-                    </p>
-                  </div>
+                  
                 </div>
               </div>
             )}
@@ -1221,17 +1231,24 @@ export default function CollegeOnboarding() {
                           </CardHeader>
                           <CardContent className="grid grid-cols-1 gap-6">
                             {/* Estimated Amount */}
-                            <div className="space-y-2">
-                              <Label htmlFor={`${tier}-amount`}>Estimated Amount (₹)</Label>
-                              <Input
-                                id={`${tier}-amount`}
-                                type="number"
-                                min="0"
-                                value={formData.packageConfigs[tier].estimatedAmount}
-                                onChange={(e) => handleEstimatedAmountChange(tier, e.target.value)}
-                                className="w-full focus-visible:ring-orange-500"
-                              />
-                            </div>
+                                        <div className="space-y-2">
+                                          <Label htmlFor={`${tier}-amount`}>Estimated Amount (₹)</Label>
+                                          <Select
+                                            value={formData.packageConfigs[tier].estimatedAmount}
+                                            onValueChange={(value) => handleEstimatedAmountChange(tier, value)}
+                                          >
+                                            <SelectTrigger id={`${tier}-amount`} className="focus:ring-orange-500">
+                                              <SelectValue placeholder="Select Amount" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              {PackageAmountOptions[tier].map((amount) => (
+                                                <SelectItem key={amount} value={amount}>
+                                                  ₹{parseInt(amount).toLocaleString()}
+                                                </SelectItem>
+                                              ))}
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
                             
                             <div className="space-y-4">
                               <h4 className="font-medium">Metrics Configuration</h4>
@@ -1283,7 +1300,7 @@ export default function CollegeOnboarding() {
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex gap-4 justify-between">
+            {/* <div className="flex gap-4 justify-between">
               <Button 
                 type="button" 
                 variant="outline"
@@ -1318,7 +1335,44 @@ export default function CollegeOnboarding() {
     </>
   )}
 </Button>
-            </div>
+            </div> */}
+
+<div className="flex gap-4 justify-between">
+  <Button 
+    type="button" 
+    variant="outline"
+    onClick={prevStep}
+    className="w-1/3"
+    disabled={currentStep === 1}
+  >
+    <ArrowLeft className="mr-2 h-4 w-4" /> Previous
+  </Button>
+  
+  {currentStep === totalSteps ? (
+    <Button 
+      type="submit"
+      className="w-2/3 bg-orange-500 hover:bg-orange-600 text-white"
+      disabled={mutation.isPending || !validateCurrentStep()}
+    >
+      {mutation.isPending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Submitting...
+        </>
+      ) : (
+        "Complete Onboarding"
+      )}
+    </Button>
+  ) : (
+    <Button 
+      type="button"
+      className="w-2/3 bg-orange-500 hover:bg-orange-600 text-white"
+      onClick={() => validateCurrentStep() && nextStep()}
+    >
+      Continue <ArrowRight className="ml-2 h-4 w-4" />
+    </Button>
+  )}
+</div>
           </form>
         </CardContent>
       </Card>
