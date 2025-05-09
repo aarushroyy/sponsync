@@ -16,8 +16,8 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: 'sponsyncc@gmail.com',
+      pass: 'rkbqmqucbpevuycp'
     },
     logger: true,
     debug: true,

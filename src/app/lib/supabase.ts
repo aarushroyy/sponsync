@@ -43,37 +43,84 @@ export async function uploadPoster(file: File, collegeId: string): Promise<strin
   }
 }
 
-export async function uploadIDCard(file: File, uniqueId: string): Promise<string | null> {
-  try {
-    const fileExt = file.name.split('.').pop()
-    const filePath = `public/${uniqueId}-${Date.now()}.${fileExt}`
+// export async function uploadIDCard(file: File, uniqueId: string): Promise<string | null> {
+//   try {
+//     const fileExt = file.name.split('.').pop()
+//     const filePath = `public/${uniqueId}-${Date.now()}.${fileExt}`
 
-    // Add contentType for better MIME type handling
-    const { error: uploadError } = await supabase.storage
-      .from('spoc-id-cards')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: true,
-        contentType: file.type
-      })
+//     // Add contentType for better MIME type handling
+//     const { error: uploadError } = await supabase.storage
+//       .from('spoc-id-cards')
+//       .upload(filePath, file, {
+//         cacheControl: '3600',
+//         upsert: true,
+//         contentType: file.type
+//       })
 
-    if (uploadError) {
-      console.error('Error uploading ID card:', uploadError)
-      return null
-    }
+//     if (uploadError) {
+//       console.error('Error uploading ID card:', uploadError)
+//       return null
+//     }
 
-    const { data } = supabase.storage
-      .from('spoc-id-cards')
-      .getPublicUrl(filePath)
+//     const { data } = supabase.storage
+//       .from('spoc-id-cards')
+//       .getPublicUrl(filePath)
     
-    console.log("Generated Public URL for ID card:", data.publicUrl)
+//     console.log("Generated Public URL for ID card:", data.publicUrl)
     
-    return data.publicUrl
-  } catch (error) {
-    console.error('Detailed error in ID card upload function:', error)
+//     return data.publicUrl
+//   } catch (error) {
+//     console.error('Detailed error in ID card upload function:', error)
+//     return null
+//   }
+// }
+
+export async function uploadIDCard(
+  file: File,
+  uniqueId: string
+): Promise<string | null> {
+  // 1) Normalize & guard extension
+  const rawExt = file.name.split('.').pop() ?? ''
+  const ext    = rawExt.toLowerCase()
+  if (ext !== 'jpg' && ext !== 'jpeg') {
+    console.error(`uploadIDCard: only .jpg/.jpeg allowed (got .${ext})`)
     return null
   }
+
+  // 2) Build foldered path—must be exactly “public/...”
+  const filePath = `public/${uniqueId}-${Date.now()}.${ext}`
+
+  // 3) Attempt the upload (we only destructure `error` because we don't need `data`)
+  const { error: upError } = await supabase
+    .storage
+    .from('spoc-documents')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: true,
+      contentType: file.type,
+    })
+
+  if (upError) {
+    console.error('uploadIDCard → Supabase upload failed:', upError)
+    return null
+  }
+
+  // 4) Retrieve a public URL (getPublicUrl never returns an `error` field)
+  const { data: urlData } = supabase
+    .storage
+    .from('spoc-documents')
+    .getPublicUrl(filePath)
+
+  if (!urlData || !urlData.publicUrl) {
+    console.error('uploadIDCard → failed to get publicUrl for', filePath)
+    return null
+  }
+
+  // 5) Success
+  return urlData.publicUrl
 }
+
+
 
 export async function uploadVerificationPhotos(files: File[], assignmentId: string): Promise<string[]> {
   try {
