@@ -32,14 +32,188 @@ const generateToken = (userId: string): string => {
   return jwt.sign({ userId }, process.env.JWT_SECRET!, { expiresIn: '24h' });
 };
 
+// const sendVerificationEmail = async (userId: string, email: string): Promise<void> => {
+//   const token = generateToken(userId);
+//   const verificationLink = `${process.env.BASE_URL}/api/auth/verify-email?token=${token}`;
+
+//   await transporter.sendMail({
+//     to: email,
+//     subject: 'Verify your email',
+//     html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
+//   });
+// };
+
 const sendVerificationEmail = async (userId: string, email: string): Promise<void> => {
   const token = generateToken(userId);
+  // Use the appropriate deployment URL, not localhost
   const verificationLink = `${process.env.BASE_URL}/api/auth/verify-email?token=${token}`;
 
   await transporter.sendMail({
     to: email,
-    subject: 'Verify your email',
-    html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
+    subject: 'Verify your email for Sponsync',
+    html: `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Verify Your Email - Sponsync</title>
+          <style>
+              @import url('https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700&display=swap');
+              
+              body {
+                  font-family: 'Geist Sans', sans-serif;
+                  margin: 0;
+                  padding: 0;
+                  background-color: #f7f9fc;
+                  color: #333;
+                  line-height: 1.6;
+              }
+              
+              .email-container {
+                  max-width: 600px;
+                  margin: 20px auto;
+                  background-color: #ffffff;
+                  border-radius: 12px;
+                  overflow: hidden;
+                  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+              }
+              
+              .email-header {
+                  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+                  padding: 30px 0;
+                  text-align: center;
+                  color: white;
+              }
+              
+              .logo-text {
+                  font-size: 32px;
+                  font-weight: 700;
+                  margin-bottom: 0;
+                  color: #000000;
+              }
+              
+              .email-body {
+                  padding: 40px 30px;
+                  text-align: center;
+              }
+              
+              h1 {
+                  color: #FF6B35;
+                  font-size: 28px;
+                  margin-top: 0;
+                  margin-bottom: 24px;
+                  font-weight: 600;
+              }
+              
+              p {
+                  margin-bottom: 24px;
+                  font-size: 16px;
+                  color: #4a5568;
+              }
+              
+              .verification-button {
+                  display: inline-block;
+                  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+                  color: white;
+                  font-weight: 500;
+                  text-decoration: none;
+                  padding: 14px 36px;
+                  border-radius: 8px;
+                  margin: 20px 0;
+                  font-size: 16px;
+                  border: none;
+              }
+              
+              .verification-link {
+                  margin-top: 30px;
+                  padding: 16px;
+                  background-color: #f5f7fa;
+                  border-radius: 8px;
+                  word-break: break-all;
+                  font-size: 14px;
+                  color: #FF6B35;
+                  text-align: left;
+              }
+              
+              .expiration-notice {
+                  font-size: 14px;
+                  color: #718096;
+                  margin-top: 30px;
+                  padding-top: 20px;
+                  border-top: 1px solid #edf2f7;
+              }
+              
+              .email-footer {
+                  background-color: #f5f7fa;
+                  padding: 30px;
+                  text-align: center;
+                  color: #718096;
+                  font-size: 14px;
+                  border-top: 1px solid #edf2f7;
+              }
+              
+              .copyright {
+                  margin-top: 15px;
+                  font-size: 12px;
+              }
+              
+              .highlight {
+                  position: relative;
+                  display: inline-block;
+              }
+              
+              .highlight::after {
+                  content: '';
+                  position: absolute;
+                  bottom: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 8px;
+                  background-color: rgba(255, 107, 53, 0.2);
+                  z-index: -1;
+                  border-radius: 4px;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="email-container">
+              <div class="email-header">
+                  <h1 class="logo-text">Spon<span style="color: #FFFFFF;">Sync</span></h1>
+              </div>
+              
+              <div class="email-body">
+                  <h1>Confirm your email address</h1>
+                  
+                  <p>Thanks for signing up with Sponsync, your bridge between colleges and sponsors! Please verify your email address to complete your registration.</p>
+                  
+                  <a href="${verificationLink}" class="verification-button">
+                      Verify My Email
+                  </a>
+                  
+                  <p>This verification link will expire in <span class="highlight">24 hours</span> for security reasons.</p>
+                  
+                  <div class="verification-link">
+                      <strong>If the button doesn't work, copy and paste this URL into your browser:</strong><br>
+                      <a href="${verificationLink}">${verificationLink}</a>
+                  </div>
+                  
+                  <div class="expiration-notice">
+                      <p>If you did not create an account with Sponsync, please ignore this email.</p>
+                  </div>
+              </div>
+              
+              <div class="email-footer">
+                  <p>Best regards,<br>The Sponsync Team</p>
+                  
+                  <div class="copyright">
+                      © ${new Date().getFullYear()} Sponsync. All rights reserved.
+                  </div>
+              </div>
+          </div>
+      </body>
+      </html>
+    `,
   });
 };
 
