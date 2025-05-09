@@ -333,24 +333,26 @@ const HomePage = () => {
             {/* Main Navigation - Desktop */}
             <nav className="hidden md:flex items-center space-x-1">
               <div className="relative group">
-                <button className="px-3 py-2 text-gray-700 hover:text-orange-500 rounded-md flex items-center">
-                  For Colleges <ChevronDown className="ml-1 h-4 w-4" />
-                </button>
-                <div className="absolute left-0 top-full w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <a href="/auth/college/login" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Login</a>
-                  <a href="/auth/college/register" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Register</a>
-                </div>
+              <button className="px-3 py-2 text-gray-700 hover:text-orange-500 rounded-md flex items-center">
+    For Colleges <ChevronDown className="ml-1 h-4 w-4" />
+  </button>
+  <div className="absolute left-0 top-full w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+    <a href="/college" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Why SponSync</a>
+    <a href="/auth/college/login" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Login</a>
+    <a href="/auth/college/register" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Register</a>
+  </div>
               </div>
               
               <div className="relative group">
-                <button className="px-3 py-2 text-gray-700 hover:text-orange-500 rounded-md flex items-center">
-                  For Companies <ChevronDown className="ml-1 h-4 w-4" />
-                </button>
-                <div className="absolute left-0 top-full w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <a href="/auth/company/login" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Login</a>
-                  <a href="/auth/company/register" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Register</a>
-                </div>
-              </div>
+  <button className="px-3 py-2 text-gray-700 hover:text-orange-500 rounded-md flex items-center">
+    For Companies <ChevronDown className="ml-1 h-4 w-4" />
+  </button>
+  <div className="absolute left-0 top-full w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+    <a href="/company" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Why Sponsor</a>
+    <a href="/auth/company/login" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Login</a>
+    <a href="/auth/company/register" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-500">Register</a>
+  </div>
+</div>
               
               <div className="relative group">
                 <button className="px-3 py-2 text-gray-700 hover:text-orange-500 rounded-md flex items-center">
@@ -541,8 +543,8 @@ const HomePage = () => {
                       <div className="absolute bottom-0 inset-x-0 h-1/3 bg-gradient-to-t from-white/80 to-transparent flex items-end justify-center p-4">
                         <div className="w-full bg-white/90 rounded-lg shadow-sm p-3 flex items-center justify-between">
                           <div className="space-y-1">
-                            <div className="text-xs text-gray-500">Total Sponsorships</div>
-                            <div className="text-lg font-bold text-gray-900">₹24.5M</div>
+                            <div className="text-xs text-gray-500">Connecting Companies & Colleges</div>
+                            <div className="text-lg font-bold text-gray-900">Increasing Sponsroships </div>
                           </div>
                           <div className="flex items-center h-10 gap-1">
                             <div className="h-3 w-1 bg-orange-200 rounded-t"></div>
@@ -573,8 +575,8 @@ const HomePage = () => {
             <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-lg overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/20">
                 {[
-                  { value: "400+", label: "College Events", icon: GraduationCap },
-                  { value: "₹45M+", label: "Sponsorships Facilitated", icon: BarChart4 },
+                  { value: "40+", label: "College Events", icon: GraduationCap },
+                  { value: "₹45k+", label: "Sponsorships Facilitated", icon: BarChart4 },
                   { value: "92%", label: "Satisfaction Rate", icon: CheckCircle }
                 ].map((stat, index) => (
                   <div key={index} className="p-8 text-center">
@@ -1085,16 +1087,16 @@ const HomePage = () => {
             </div>
             
             <div>
-              <h4 className="font-bold text-gray-900 mb-4">For Companies</h4>
-              <ul className="space-y-2">
-                <li><a href="/auth/company/register" className="text-gray-600 hover:text-orange-500">Register</a></li>
-                <li><a href="/auth/company/login" className="text-gray-600 hover:text-orange-500">Login</a></li>
-                <li><a href="#features" className="text-gray-600 hover:text-orange-500">Benefits</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-orange-500">Browse Events</a></li>
-              </ul>
-            </div>
+  <h4 className="font-bold text-gray-900 mb-4">For Companies</h4>
+  <ul className="space-y-2">
+    <li><a href="/company" className="text-gray-600 hover:text-orange-500">Why Sponsor</a></li>
+    <li><a href="/auth/company/register" className="text-gray-600 hover:text-orange-500">Register</a></li>
+    <li><a href="/auth/company/login" className="text-gray-600 hover:text-orange-500">Login</a></li>
+    <li><a href="#features" className="text-gray-600 hover:text-orange-500">Benefits</a></li>
+  </ul>
+</div>
             
-            <div>
+            {/* <div>
               <h4 className="font-bold text-gray-900 mb-4">Resources</h4>
               <ul className="space-y-2">
                 <li><a href="#" className="text-gray-600 hover:text-orange-500">Help Center</a></li>
@@ -1102,7 +1104,7 @@ const HomePage = () => {
                 <li><a href="#" className="text-gray-600 hover:text-orange-500">Case Studies</a></li>
                 <li><a href="#" className="text-gray-600 hover:text-orange-500">Contact Us</a></li>
               </ul>
-            </div>
+            </div> */}
           </div>
             <div className="mt-12 pt-8 border-t flex flex-col md:flex-row justify-between items-center">
               <p className="text-gray-500 text-sm mb-4 md:mb-0">
