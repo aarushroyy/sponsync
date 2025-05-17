@@ -459,14 +459,19 @@ const HomePage = () => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center lg:justify-start">
+                <Link href="/college" passHref>
+
                   <Button size="xl" className="group">
                     Register as College
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
+                  </Link>
+                  <Link href="/company" passHref>
                   <Button variant="outline" size="xl" className="group">
                     Register as Company
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
+                  </Link>
                 </div>
                 
                 <div className="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-4">
@@ -901,10 +906,23 @@ const HomePage = () => {
                     </div>
                   ))}
                 </div>
-                
-                <Button size="lg" className="mt-8 group">
-                  Explore Metrics <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
+              
+              <div className="flex gap-8 mt-8">
+                  <Link href="/college" passHref>
+                    <Button size="lg" className="group">
+                      Explore College 
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                  
+                  <Link href="/company" passHref>
+                    <Button size="lg" className="group">
+                      Explore Company 
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                </div>
+
               </div>
               
               {/* Metrics Visualization */}
@@ -1014,18 +1032,22 @@ const HomePage = () => {
                 <GraduationCap className="h-12 w-12 text-orange-400 mx-auto mb-4" />
                 <h3 className="text-xl font-bold mb-2">For Colleges</h3>
                 <p className="text-gray-300 mb-4">Showcase your events and manage sponsorships</p>
+                <Link href="/college" passHref>
                 <Button variant="outline" className="w-full border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-white">
                   Register as College
                 </Button>
+                </Link>
               </div>
               
               <div className="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors">
                 <Building className="h-12 w-12 text-orange-400 mx-auto mb-4" />
                 <h3 className="text-xl font-bold mb-2">For Companies</h3>
                 <p className="text-gray-300 mb-4">Find the perfect events to sponsor</p>
+                <Link href="/company" passHref>
                 <Button variant="outline" className="w-full border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-white">
                   Register as Company
                 </Button>
+                </Link>
               </div>
               
               <div className="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors">
@@ -1081,8 +1103,7 @@ const HomePage = () => {
               <ul className="space-y-2">
                 <li><a href="/auth/college/register" className="text-gray-600 hover:text-orange-500">Register</a></li>
                 <li><a href="/auth/college/login" className="text-gray-600 hover:text-orange-500">Login</a></li>
-                <li><a href="#how-it-works" className="text-gray-600 hover:text-orange-500">How It Works</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-orange-500">Pricing</a></li>
+                <li><a href="/college" className="text-gray-600 hover:text-orange-500">How It Works</a></li>
               </ul>
             </div>
             

@@ -38,7 +38,9 @@ export function validatePhone(phone: string): string | null {
     return "Phone number must have at least 10 digits";
   }
   
-  const phoneRegex = /^(\+?\d{1,3})?[\s-]?\(?(\d{3})\)?[\s-]?(\d{3})[\s-]?(\d{4})$/;
+  // const phoneRegex = /^(\+?\d{1,3})?[\s-]?\(?(\d{3})\)?[\s-]?(\d{3})[\s-]?(\d{4})$/;
+    const phoneRegex = /^(\+?\d{0,3})?[-\s]?[\(]?[\d]{1,4}[\)]?[-\s]?[\d\s]{5,15}$/;
+
   if (!phoneRegex.test(phone)) {
     return "Please enter a valid phone number (e.g., +91 9876543210)";
   }

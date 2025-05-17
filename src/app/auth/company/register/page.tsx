@@ -548,7 +548,6 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                       placeholder="+91 9876543210"
                     />
                     {errors.phone && <p className="text-sm text-red-500 mt-1">{errors.phone}</p>}
-                    <p className="text-xs text-gray-500">Include country code (e.g., +91 for India)</p>
                   </div>
                   
                   {/* <div className="space-y-2 mt-4">

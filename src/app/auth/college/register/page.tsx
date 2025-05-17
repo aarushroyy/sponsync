@@ -748,7 +748,6 @@ export default function CollegeRegisterPage() {
                     {errors.phone && (
                       <p className="text-sm text-red-500">{errors.phone}</p>
                     )}
-                    <p className="text-xs text-gray-500">Include country code (e.g., +91 for India)</p>
                   </div>
 
                   <div className="flex flex-col space-y-3 mt-6">

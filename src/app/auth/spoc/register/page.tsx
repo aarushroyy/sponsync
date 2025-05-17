@@ -719,7 +719,6 @@ export default function SpocRegisterPage() {
                     {errors.phone && (
                       <p className="text-sm text-red-500">{errors.phone}</p>
                     )}
-                    <p className="text-xs text-gray-500">Include country code (e.g., +91 for India)</p>
                   </div>
 
                   <div className="space-y-2">
