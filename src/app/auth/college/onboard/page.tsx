@@ -848,37 +848,106 @@ export default function CollegeOnboarding() {
   //   }
   // };
 
-  const validatePackageAmounts = (): boolean => {
-    const bronzeAmount = parseInt(formData.packageConfigs[PackageTier.BRONZE].estimatedAmount) || 0;
-    const silverAmount = parseInt(formData.packageConfigs[PackageTier.SILVER].estimatedAmount) || 0;
-    const goldAmount = parseInt(formData.packageConfigs[PackageTier.GOLD].estimatedAmount) || 0;
-    
+  const [validationError, setValidationError] = useState<string | null>(null);
 
+
+  // const validatePackageAmounts = (): boolean => {
+  //   const bronzeAmount = parseInt(formData.packageConfigs[PackageTier.BRONZE].estimatedAmount) || 0;
+  //   const silverAmount = parseInt(formData.packageConfigs[PackageTier.SILVER].estimatedAmount) || 0;
+  //   const goldAmount = parseInt(formData.packageConfigs[PackageTier.GOLD].estimatedAmount) || 0;
     
-    // Check Bronze < Silver < Gold
-    if (bronzeAmount >= silverAmount) {
-      toast.error("Bronze package amount must be less than Silver package amount");
-      return false;
-    }
+  //   setValidationError(null);
     
-    if (silverAmount >= goldAmount) {
-      toast.error("Silver package amount must be less than Gold package amount");
-      return false;
-    }
+  //   // Check Bronze < Silver < Gold
+  //   if (bronzeAmount >= silverAmount) {
+  //     toast.error("Bronze package amount must be less than Silver package amount");
+  //     setValidationError("Bronze package amount must be less than Silver package amount");
+  //     return false;
+  //   }
     
-    return true;
-  };
+  //   if (silverAmount >= goldAmount) {
+  //     toast.error("Silver package amount must be less than Gold package amount");
+  //     setValidationError("Silver package amount must be less than Gold package amount");
+  //     return false;
+  //   }
+    
+  //   return true;
+  // };
   
-  // Form submission should only happen when explicitly clicking the final step's submit button
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // // Form submission should only happen when explicitly clicking the final step's submit button
+  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
     
-    if (currentStep === totalSteps) {
-      if (validateCurrentStep() && validatePackageAmounts()) {
-        mutation.mutate(formData);
-      }
+  //   if (currentStep === totalSteps) {
+  //     setValidationError(null);
+  //     if (validateCurrentStep() && validatePackageAmounts()) {
+  //       mutation.mutate(formData);
+  //     }
+  //     else {
+  //     setValidationError("Please fill in all required fields");
+  //   }
+  //   }
+  // };
+
+  //tying to fxi error showng below
+
+  const validatePackageAmounts = (): boolean => {
+  const bronzeAmount = parseInt(formData.packageConfigs[PackageTier.BRONZE].estimatedAmount) || 0;
+  const silverAmount = parseInt(formData.packageConfigs[PackageTier.SILVER].estimatedAmount) || 0;
+  const goldAmount = parseInt(formData.packageConfigs[PackageTier.GOLD].estimatedAmount) || 0;
+  
+    setValidationError(null); // Clear previous errors
+
+  console.log('Validating amounts:', { bronzeAmount, silverAmount, goldAmount }); // Debug log
+  
+  if (bronzeAmount >= silverAmount) {
+        setValidationError("Silver package amount must be greater than Bronze package amount");
+
+    toast.error("Silver package amount must be greater than Bronze package amount");
+    return false;
+  }
+  
+  if (silverAmount >= goldAmount) {
+        setValidationError("Gold package amount must be greater than Siver package amount");
+
+    toast.error("Gold package amount must be less than Silver package amount");
+    return false;
+  }
+  
+  return true;
+};
+
+// Update the handleSubmit function
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  
+  if (currentStep === totalSteps) {
+    console.log('Current form data:', formData); // Debug log
+    
+    // First check if amounts are valid
+    if (!validatePackageAmounts()) {
+      console.log('Package amount validation failed'); // Debug log
+      return;
     }
-  };
+
+    // Then check other validations
+    if (!validateCurrentStep()) {
+      toast.error("Please fill in all required fields");
+      console.log('Current step validation failed'); // Debug log
+      return;
+    }
+
+    // If both validations pass, proceed with submission
+    mutation.mutate(formData);
+  } else {
+    // Handle next step
+    if (validateCurrentStep()) {
+      nextStep();
+    } else {
+      toast.error("Please complete all fields before proceeding");
+    }
+  }
+};
 
   // Calculate total estimated amount from all selected packages
   // const calculateTotalEstimated = () => {
@@ -1299,6 +1368,27 @@ export default function CollegeOnboarding() {
               </Alert>
             )}
 
+            {/* Package Amount Validation Error */}
+            {validationError && currentStep === totalSteps && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-2"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {validationError}
+                </AlertDescription>
+              </Alert>
+            )}
+
             {/* Navigation Buttons */}
             {/* <div className="flex gap-4 justify-between">
               <Button 
@@ -1348,11 +1438,44 @@ export default function CollegeOnboarding() {
     <ArrowLeft className="mr-2 h-4 w-4" /> Previous
   </Button>
   
-  {currentStep === totalSteps ? (
+  {/* {currentStep === totalSteps ? (
     <Button 
       type="submit"
       className="w-2/3 bg-orange-500 hover:bg-orange-600 text-white"
       disabled={mutation.isPending || !validateCurrentStep()}
+    >
+      {mutation.isPending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Submitting...
+        </>
+      ) : (
+        "Complete Onboarding"
+      )}
+    </Button>
+  ) : (
+    <Button 
+      type="button"
+      className="w-2/3 bg-orange-500 hover:bg-orange-600 text-white"
+      onClick={() => validateCurrentStep() && nextStep()}
+    >
+      Continue <ArrowRight className="ml-2 h-4 w-4" />
+    </Button>
+  )}
+</div> */}
+{currentStep === totalSteps ? (
+    <Button 
+      type="submit"
+      className="w-2/3 bg-orange-500 hover:bg-orange-600 text-white"
+      onClick={(e) => {
+        e.preventDefault();
+        const isValid = validatePackageAmounts();
+        if (isValid) {
+          // Submit the form programmatically instead of passing the event
+          mutation.mutate(formData);
+        }
+      }}
+      disabled={mutation.isPending}
     >
       {mutation.isPending ? (
         <>
