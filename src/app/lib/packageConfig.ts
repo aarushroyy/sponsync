@@ -136,27 +136,39 @@ export const PACKAGE_CONFIGS: Record<PackageTier, PackageConfig> = {
       },
       // Digital Marketing Views
       [MetricType.DIGITAL_MARKETING_VIEWS]: {
-        enabled: false,
+        enabled: true,
+        defaultMin: 100000,
+        defaultMax: 200000,
         minAllowed: 0,
-        maxAllowed: 0
+        maxAllowed: 500000,
+        defaultRangeOption: '100K-150K'
       },
       // Customer Survey/Product testing
       [MetricType.CUSTOMER_SURVEYS]: {
-        enabled: false,
+        enabled: true,
+        defaultMin: 50,
+        defaultMax: 100,
         minAllowed: 0,
-        maxAllowed: 0
+        maxAllowed: 200,
+        defaultRangeOption: '50-100'
       },
       // Keynote Speaking
       [MetricType.KEYNOTE_SPEAKING]: {
-        enabled: false,
+        enabled: true,
+        defaultMin: 60,
+        defaultMax: 90,
         minAllowed: 0,
-        maxAllowed: 0
+        maxAllowed: 150,
+        defaultRangeOption: '1.5hours'
       },
       // Engagement Activity
       [MetricType.ENGAGEMENT_ACTIVITY]: {
-        enabled: false,
+        enabled: true,
+        defaultMin: 30,
+        defaultMax: 60,
         minAllowed: 0,
-        maxAllowed: 0
+        maxAllowed: 90,
+        defaultRangeOption: '1hour'
       },
       // Announcements during event
       [MetricType.ANNOUNCEMENTS]: {
@@ -180,8 +192,8 @@ export const PACKAGE_CONFIGS: Record<PackageTier, PackageConfig> = {
     features: {
       // Stalls (Yes/No)
       [FeatureType.STALLS]: {
-        enabled: false,
-        defaultValueOption: 'No'
+        enabled: true,
+        defaultValueOption: 'Yes'
       },
       // Title Rights (Yes/No)
       [FeatureType.TITLE_RIGHTS]: {
@@ -190,18 +202,18 @@ export const PACKAGE_CONFIGS: Record<PackageTier, PackageConfig> = {
       },
       // Main stage backdrop (time-based)
       [FeatureType.MAIN_STAGE_BACKDROP]: {
-        enabled: false,
+        enabled: true,
         defaultValueOption: '0-1hour'
       },
       // Standees (number-based)
       [FeatureType.STANDEES]: {
-        enabled: false,
+        enabled: true,
         defaultValueOption: '0-5'
       },
       // Other customizable features
       [FeatureType.OTHER]: {
-        enabled: false,
-        defaultValueOption: 'No'
+        enabled: true,
+        defaultValueOption: 'Yes'
       }
     }
   },
@@ -245,9 +257,12 @@ export const PACKAGE_CONFIGS: Record<PackageTier, PackageConfig> = {
       },
       // Keynote Speaking
       [MetricType.KEYNOTE_SPEAKING]: {
-        enabled: false,
+        enabled: true,
+        defaultMin: 60,
+        defaultMax: 90,
         minAllowed: 0,
-        maxAllowed: 0
+        maxAllowed: 150,
+        defaultRangeOption: '1.5hours'
       },
       // Engagement Activity
       [MetricType.ENGAGEMENT_ACTIVITY]: {
@@ -280,8 +295,8 @@ export const PACKAGE_CONFIGS: Record<PackageTier, PackageConfig> = {
     features: {
       // Stalls (Yes/No)
       [FeatureType.STALLS]: {
-        enabled: false,
-        defaultValueOption: 'No'
+        enabled: true,
+        defaultValueOption: 'Yes'
       },
       // Title Rights (Yes/No)
       [FeatureType.TITLE_RIGHTS]: {
@@ -300,8 +315,8 @@ export const PACKAGE_CONFIGS: Record<PackageTier, PackageConfig> = {
       },
       // Other customizable features
       [FeatureType.OTHER]: {
-        enabled: false,
-        defaultValueOption: 'No'
+        enabled: true,
+        defaultValueOption: 'Yes'
       }
     }
   },

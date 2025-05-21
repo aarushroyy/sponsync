@@ -652,7 +652,7 @@ export default function CollegeOnboarding() {
     region: "",
     eventType: "",
     poster: null as File | null,
-    packageTier: PackageTier.SILVER,
+    packageTier: PackageTier.BRONZE,
     // totalBudgetGoal: "50000", // Default total budget goal
     packageConfigs: {
       [PackageTier.BRONZE]: initializePackageData(PackageTier.BRONZE),
@@ -1186,7 +1186,7 @@ export default function CollegeOnboarding() {
                   </div>
                   
                   <Tabs 
-                    defaultValue={PackageTier.SILVER} 
+                    defaultValue={PackageTier.BRONZE} 
                     value={formData.packageTier} 
                     onValueChange={(value) => setFormData(prev => ({ ...prev, packageTier: value as PackageTier }))} 
                     className="w-full"
