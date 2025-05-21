@@ -1241,8 +1241,6 @@ import {
   Menu,
   X,
   ChevronDown,
-  Building,
-  GraduationCap,
 } from 'lucide-react';
 
 // Custom Button with dark/orange variants
@@ -1472,50 +1470,104 @@ const HomePage = () => {
               </div>
 
               {/* Right: Illustration */}
-              <div className="lg:w-1/2 relative">
-                <div className="relative z-10 rounded-lg shadow-xl p-2 bg-[#313030]">
-                  <div className="relative rounded-lg overflow-hidden" style={{
-                    background: "linear-gradient(135deg, #ff3131 0%, #ff914d 100%)"
-                  }}>
-                    <div className="aspect-[4/3] w-full relative flex items-center justify-center p-6">
-                      {/* College Card */}
-                      <div className="flex gap-8">
-  {/* College Card */}
-  <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-lg p-6 w-64 border border-[#ff3131]">
-    <div className="flex items-center gap-4 mb-3">
-      <div className="bg-white/20 rounded-full p-2">
-        <GraduationCap className="w-8 h-8 text-white" />
-      </div>
-      <div>
-        <h3 className="font-bold text-white">Colleges</h3>
-        <p className="text-sm text-white/80">Event showcasing</p>
+              {/* Right: Illustration */}
+<div className="lg:w-1/2 relative">
+  <div className="absolute inset-0 bg-gradient-to-r from-[#ff3131]/10 to-[#ff914d]/10 rounded-3xl transform rotate-6 scale-95 translate-x-4 translate-y-4"></div>
+  <div className="absolute inset-0 bg-[#313030]/80 backdrop-blur-sm rounded-3xl transform -rotate-3 scale-95"></div>
+  
+  <div className="relative z-10 rounded-2xl shadow-2xl p-6 bg-[#313030] border border-[#414040]">
+    <div className="absolute top-4 right-4">
+      <div className="flex gap-2">
+        <div className="w-3 h-3 rounded-full bg-[#ff3131]"></div>
+        <div className="w-3 h-3 rounded-full bg-[#ff7040]"></div>
+        <div className="w-3 h-3 rounded-full bg-[#ff914d]"></div>
       </div>
     </div>
-    <div className="h-2 bg-white/20 rounded w-3/4 mb-2"></div>
-    <div className="h-2 bg-white/20 rounded w-4/5 mb-2"></div>
-    <div className="h-2 bg-white/20 rounded w-2/3"></div>
-  </div>
-  {/* Company Card */}
-  <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-lg p-6 w-64 border border-[#ff914d]">
-    <div className="flex items-center gap-4 mb-3">
-      <div className="bg-white/20 rounded-full p-2">
-        <Building className="w-8 h-8 text-white" />
-      </div>
-      <div>
-        <h3 className="font-bold text-white">Companies</h3>
-        <p className="text-sm text-white/80">Sponsorship opportunities</p>
+    
+    <div className="relative rounded-xl overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#ff3131]/20 to-[#ff914d]/20 backdrop-blur-sm"></div>
+      <div className="aspect-video w-full relative flex items-center justify-center p-8">
+        {/* Cards Container with 3D perspective */}
+        <div className="flex flex-col md:flex-row gap-6 perspective-1000 transform hover:scale-105 transition-transform duration-500">
+          {/* College Card */}
+          <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-2xl p-6 w-64 border border-white/10 transform transition-transform duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(255,145,77,0.5)]">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-white/20 rounded-full p-3 shadow-inner">
+                <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 1L1 8l11 7 11-7-11-7z" />
+                  <path d="M5 21v-9" />
+                  <path d="M19 21v-9" />
+                  <path d="M3 11v10" />
+                  <path d="M21 11v10" />
+                  <path d="M3 21h18" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-xl">Colleges</h3>
+                <p className="text-sm text-white/80">Event showcasing</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="h-2 bg-white/30 rounded-full w-3/4"></div>
+              <div className="h-2 bg-white/20 rounded-full w-4/5"></div>
+              <div className="h-2 bg-white/10 rounded-full w-2/3"></div>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <div className="bg-white/10 rounded-full px-3 py-1 text-xs text-white/90 backdrop-blur-sm">
+                Connect Now
+              </div>
+            </div>
+          </div>
+          
+          {/* Company Card */}
+          <div className="bg-gradient-to-br from-[#ff914d] to-[#ff3131] rounded-xl shadow-2xl p-6 w-64 border border-white/10 transform transition-transform duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_rgba(255,49,49,0.5)]">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-white/20 rounded-full p-3 shadow-inner">
+                <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 21h18M9 8h1m-1 4h1m-1 4h1m4-8h1m-1 4h1m-1 4h1m5-16H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-xl">Companies</h3>
+                <p className="text-sm text-white/80">Sponsorship opportunities</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="h-2 bg-white/30 rounded-full w-4/5"></div>
+              <div className="h-2 bg-white/20 rounded-full w-3/4"></div>
+              <div className="h-2 bg-white/10 rounded-full w-3/5"></div>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <div className="bg-white/10 rounded-full px-3 py-1 text-xs text-white/90 backdrop-blur-sm">
+                Partner With Us
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Decorative elements */}
+        <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-[#ff3131]/30 to-[#ff914d]/10 rounded-full blur-xl"></div>
+        <div className="absolute -top-4 -right-4 w-32 h-32 bg-gradient-to-br from-[#ff914d]/20 to-[#ff3131]/5 rounded-full blur-xl"></div>
       </div>
     </div>
-    <div className="h-2 bg-white/20 rounded w-3/4 mb-2"></div>
-    <div className="h-2 bg-white/20 rounded w-4/5 mb-2"></div>
-    <div className="h-2 bg-white/20 rounded w-2/3"></div>
+    
+    {/* Floating Stats */}
+    <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex gap-4">
+      <div className="bg-[#363232] rounded-xl shadow-lg p-3 border-t border-[#414040] flex items-center gap-2">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ff3131] to-[#ff914d] flex items-center justify-center text-white text-xs font-bold">
+          50+
+        </div>
+        <span className="text-white text-sm font-medium">Colleges</span>
+      </div>
+      <div className="bg-[#363232] rounded-xl shadow-lg p-3 border-t border-[#414040] flex items-center gap-2">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ff914d] to-[#ff3131] flex items-center justify-center text-white text-xs font-bold">
+          30+
+        </div>
+        <span className="text-white text-sm font-medium">Companies</span>
+      </div>
+    </div>
   </div>
 </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
