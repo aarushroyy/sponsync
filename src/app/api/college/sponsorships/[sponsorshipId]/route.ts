@@ -126,7 +126,7 @@ const metricsWithProgress = bundle.campaign.metrics.map(metric => {
         endDate: endDate.toISOString(),
         name: bundle.campaign.name,
         plan: bundle.campaign.plan,
-        region: bundle.campaign.region,
+        region: bundle.campaign.regions,
         value: collegePortion,
         company: {
           id: bundle.campaign.company.id,

@@ -120,7 +120,7 @@ export async function GET(request: Request) {
         companyName: campaign.company.companyName,
         name: campaign.name,
         plan: campaign.plan,
-        region: campaign.region,
+        region: campaign.regions,
         bundleSize: campaign.bundleSize,
         status: campaign.status,
         totalValue: totalValue,
