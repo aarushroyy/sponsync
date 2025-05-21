@@ -233,7 +233,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Loader2, Building2, Eye, EyeOff, ArrowRight, CheckCircle } from "lucide-react";
 import { RegisterData } from "@/app/types/companyAuth";
-import { validateEmail, validatePassword, validateName, validatePhone, validateRequired } from "@/app/lib/authValidation";
+import { validateEmail, validatePassword, validateName, validatePhone, validateRequired,validateLinkedIn, validateWorkEmail } from "@/app/lib/authValidation";
 import { PasswordStrength } from "@/components/password-strength";
 
 export default function CompanyRegisterPage() {
@@ -247,7 +247,9 @@ export default function CompanyRegisterPage() {
     personName: "",
     position: "",
     companyName: "",
-    phone: ""
+    phone: "",
+    workEmail: "",    // NEW
+    linkedIn: "",     // NEW
   });
   
   const [errors, setErrors] = useState<Partial<RegisterData>>({});
@@ -271,11 +273,16 @@ export default function CompanyRegisterPage() {
       const positionError = validateRequired(formData.position, "Position");
       const companyNameError = validateRequired(formData.companyName, "Company Name");
       const phoneError = validatePhone(formData.phone);
+      const workEmailError = validateWorkEmail(formData.workEmail || "");
+    const linkedInError = validateLinkedIn(formData.linkedIn || "");
+  
       
       if (nameError) newErrors.personName = nameError;
       if (positionError) newErrors.position = positionError;
       if (companyNameError) newErrors.companyName = companyNameError;
       if (phoneError) newErrors.phone = phoneError;
+      if (workEmailError) newErrors.workEmail = workEmailError;
+    if (linkedInError) newErrors.linkedIn = linkedInError;
       
       // Validate terms agreement
       // if (!formData.agreeToTerms) {
@@ -330,7 +337,9 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       personName: formData.personName,
       position: formData.position,
       companyName: formData.companyName,
-      phone: formData.phone
+      phone: formData.phone,
+      workEmail: formData.workEmail,    // NEW
+      linkedIn: formData.linkedIn,     // NEW
     };
     
     mutation.mutate(dataToSend);
@@ -549,6 +558,37 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                     />
                     {errors.phone && <p className="text-sm text-red-500 mt-1">{errors.phone}</p>}
                   </div>
+
+                  <div className="space-y-2">
+                      <Label htmlFor="workEmail" className="text-gray-700">
+                        Work Email <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="workEmail"
+                        type="email"
+                        value={formData.workEmail}
+                        onChange={(e) => setFormData(prev => ({ ...prev, workEmail: e.target.value }))}
+                        className={`focus-visible:ring-indigo-500 ${errors.workEmail ? "border-red-500" : ""}`}
+                        placeholder="your.name@company.com"
+                      />
+                      {errors.workEmail && <p className="text-sm text-red-500 mt-1">{errors.workEmail}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="linkedIn" className="text-gray-700">
+                        LinkedIn Profile <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="linkedIn"
+                        type="text"
+                        value={formData.linkedIn}
+                        onChange={(e) => setFormData(prev => ({ ...prev, linkedIn: e.target.value }))}
+                        className={`focus-visible:ring-indigo-500 ${errors.linkedIn ? "border-red-500" : ""}`}
+                        placeholder="linkedin.com/in/yourprofile"
+                      />
+                      {errors.linkedIn && <p className="text-sm text-red-500 mt-1">{errors.linkedIn}</p>}
+                    </div>
+                  
                   
                   {/* <div className="space-y-2 mt-4">
                     <div className="flex items-center space-x-2">

@@ -131,6 +131,8 @@ model CompanyUser {
   position      String
   companyName   String
   phone         String
+  workEmail     String?
+  linkedin      String?
   isVerified    Boolean          @default(false)
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt

@@ -4,8 +4,8 @@ import { companyAuthService } from '@/app/services/auth.service';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, personName, position, companyName, phone } = body;
-    if (!email || !password || !personName || !position || !companyName || !phone) {
+    const { email, password, personName, position, companyName, phone, workEmail, linkedIn } = body;
+    if (!email || !password || !personName || !position || !companyName || !phone || !workEmail || !linkedIn) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 

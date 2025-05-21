@@ -8,6 +8,8 @@ export function validatePassword(password: string): string | null {
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumbers = /\d/.test(password);
   const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+  
   
   if (!(hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar)) {
     return "Password must include uppercase, lowercase, number, and special character";
@@ -63,5 +65,27 @@ export function validateName(name: string): string | null {
     return "Name contains invalid characters";
   }
   
+  return null;
+}
+
+const emaildomains = [
+  "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com", "icloud.com", "protonmail.com"
+];
+
+export function validateWorkEmail(email: string): string | null {
+  if (!email) return "Work email is required";
+  const domain = email.split("@")[1]?.toLowerCase();
+  if (!domain || emaildomains.includes(domain)) {
+    return "Please use your company work email, not a personal email";
+  }
+  // Optionally, further check for company-like domains
+  return null;
+}
+
+export function validateLinkedIn(link: string): string | null {
+  if (!link) return "LinkedIn profile is required";
+  if (!/^linkedin\.com\/in\/[A-Za-z0-9\-_.]+$/.test(link)) {
+    return "Please enter a valid LinkedIn profile (linkedin.com/in/...)";
+  }
   return null;
 }

@@ -10,4 +10,6 @@ export type LoginData = {
     position: string;
     companyName: string;
     phone: string;
+    workEmail: string;    // NEW
+    linkedIn: string;     // NEW
   };
