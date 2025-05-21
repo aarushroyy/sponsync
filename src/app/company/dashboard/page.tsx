@@ -425,9 +425,9 @@ export default function CompanyDashboardPage() {
           <Button onClick={() => router.push("/company/campaigns/new")}>
             Start Campaign
           </Button>
-          <Button variant="outline" onClick={() => router.push("/company/campaigns")}>
+          {/* <Button variant="outline" onClick={() => router.push("/company/campaigns")}>
             View Progress
-          </Button>
+          </Button> */}
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

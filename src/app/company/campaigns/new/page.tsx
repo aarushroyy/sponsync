@@ -808,7 +808,7 @@ export default function StartCampaignPage() {
   const [formData, setFormData] = useState({
     name: "",
     plan: "QUARTERLY" as CampaignPlan,
-    region: "NORTH" as Region,
+    regions: [] as Region[],
     eventTypes: [] as string[],
     bundleSize: 1,
     budgetLimit: 50000,
@@ -886,7 +886,7 @@ const budgetRanges = [
     console.log("[DEBUG Frontend] Metrics:", metrics);
     console.log("[DEBUG Frontend] Features:", features);
   
-    if (!formData.name || formData.eventTypes.length === 0) {
+    if (!formData.name || formData.eventTypes.length === 0 || formData.regions.length === 0 || formData.bundleSize <= 0) {
       console.log("[DEBUG Frontend] Validation failed - missing required fields");
       toast.error("Please fill all required fields");
       setLoading(false);
@@ -1314,7 +1314,7 @@ const budgetRanges = [
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="region">Region *</Label>
+                {/* <Label htmlFor="region">Region *</Label>
                 <Select
                   value={formData.region}
                   onValueChange={(v) => setFormData({ ...formData, region: v as Region })}
@@ -1328,7 +1328,19 @@ const budgetRanges = [
                     <SelectItem value="EAST">East</SelectItem>
                     <SelectItem value="WEST">West</SelectItem>
                   </SelectContent>
-                </Select>
+                </Select> */}
+                <Label>Regions</Label>
+                <SimpleMultiSelect
+  options={[
+    { value: "NORTH", label: "North" },
+    { value: "SOUTH", label: "South" },
+    { value: "EAST", label: "East" },
+    { value: "WEST", label: "West" }
+  ]}
+  selected={formData.regions}
+  onChange={(selected) => setFormData({ ...formData, regions: selected as Region[] })}
+/>
+
               </div>
             </div>
 
@@ -1351,7 +1363,7 @@ const budgetRanges = [
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-gray-500">Select your campaign budget limit</p>
+                  <p className="text-xs text-gray-500">Select your campaign budget limit - Excluding GST*</p>
                 </div>
 
               

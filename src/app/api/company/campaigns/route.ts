@@ -946,7 +946,7 @@ interface FeatureData {
 interface CampaignData {
   name: string;
   plan: CampaignPlan;
-  region: Region;
+  regions: Region[];
   eventTypes: string[];
   bundleSize: number;
   budgetLimit: number;
@@ -980,7 +980,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     console.log("[DEBUG] Campaign request data:", JSON.stringify(campaignData, null, 2));
 
     // Validate required fields
-    if (!campaignData.name || !campaignData.plan || !campaignData.region || 
+    if (!campaignData.name || !campaignData.plan || !campaignData.regions || !campaignData.regions.length ||
         !campaignData.eventTypes || !campaignData.bundleSize) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
@@ -991,7 +991,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         companyId: decoded.userId,
         name: campaignData.name,
         plan: campaignData.plan,
-        region: campaignData.region,
+        regions: campaignData.regions,
         eventTypes: campaignData.eventTypes,
         bundleSize: campaignData.bundleSize,
         budgetLimit: campaignData.budgetLimit || null,
@@ -1030,7 +1030,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     console.log("[DEBUG] Calling generateBundleSuggestions with:", {
       campaignId: campaign.id,
-      region: campaign.region,
+      region: campaign.regions,
       eventTypes: campaignData.eventTypes,
       bundleSize: campaignData.bundleSize,
       budgetLimit: campaignData.budgetLimit,
@@ -1042,7 +1042,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // Generate bundle suggestions using the matching algorithm
     const suggestedBundles = await generateBundleSuggestions(
       campaign.id,
-      campaign.region,
+      campaign.regions,
       campaignData.eventTypes,
       campaignData.bundleSize,
       campaignData.metrics,
@@ -1080,7 +1080,7 @@ export async function POST(request: Request): Promise<NextResponse> {
  */
 async function generateBundleSuggestions(
   campaignId: string,
-  region: Region,
+  regions: Region[],
   eventTypes: string[],
   bundleSize: number,
   companyMetrics: MetricData[],
@@ -1091,7 +1091,7 @@ async function generateBundleSuggestions(
 ) {
   console.log("[DEBUG] Starting bundle generation with params:", {
     campaignId,
-    region,
+    regions,
     eventTypes,
     bundleSize,
     budgetLimit,
@@ -1114,7 +1114,7 @@ async function generateBundleSuggestions(
   console.log("[DEBUG] Finding colleges matching region and event types");
   const matchingColleges = await prisma.collegeOnboarding.findMany({
     where: {
-      region: region,
+      region: { in: regions },
       eventType: {
         in: eventTypes,
       },

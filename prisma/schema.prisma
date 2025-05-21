@@ -158,7 +158,7 @@ model CompanyCampaign {
   company         CompanyUser    @relation(fields: [companyId], references: [id])
   name            String
   plan            CampaignPlan
-  region          Region
+  regions         Region[]
   eventTypes      String[]       // Array of event types
   bundleSize      Int            // Number of events in the bundle
   budgetLimit     Int?
