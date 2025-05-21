@@ -1479,43 +1479,39 @@ const HomePage = () => {
                   }}>
                     <div className="aspect-[4/3] w-full relative flex items-center justify-center p-6">
                       {/* College Card */}
-                      <div className="bg-[#262323] rounded-lg shadow-lg p-6 max-w-xs transform transition-transform hover:scale-105 border border-[#ff3131]/40">
-                        <div className="flex items-center mb-4">
-                          <div className="h-12 w-12 bg-[#ff3131]/30 rounded-full flex items-center justify-center">
-                            <GraduationCap className="h-6 w-6 text-[#ff914d]" />
-                          </div>
-                          <div className="ml-4">
-                            <h3 className="font-bold text-white">Colleges</h3>
-                            <p className="text-sm text-[#ff914d]/80">Event showcasing</p>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="h-2 bg-[#ff914d]/30 rounded w-3/4"></div>
-                          <div className="h-2 bg-[#ff914d]/30 rounded w-4/5"></div>
-                          <div className="h-2 bg-[#ff914d]/30 rounded w-2/3"></div>
-                        </div>
-                      </div>
-                      {/* Arrow */}
-                      <div className="flex items-center justify-center mx-4">
-                        <ArrowRight className="h-8 w-8 text-white" />
-                      </div>
-                      {/* Company Card */}
-                      <div className="bg-[#262323] rounded-lg shadow-lg p-6 max-w-xs transform transition-transform hover:scale-105 border border-[#ff914d]/40">
-                        <div className="flex items-center mb-4">
-                          <div className="h-12 w-12 bg-[#ff914d]/30 rounded-full flex items-center justify-center">
-                            <Building className="h-6 w-6 text-[#ff3131]" />
-                          </div>
-                          <div className="ml-4">
-                            <h3 className="font-bold text-white">Companies</h3>
-                            <p className="text-sm text-[#ff3131]/80">Sponsorship offers</p>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="h-2 bg-[#ff3131]/30 rounded w-3/4"></div>
-                          <div className="h-2 bg-[#ff3131]/30 rounded w-4/5"></div>
-                          <div className="h-2 bg-[#ff3131]/30 rounded w-2/3"></div>
-                        </div>
-                      </div>
+                      <div className="flex gap-8">
+  {/* College Card */}
+  <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-lg p-6 w-64 border border-[#ff3131]">
+    <div className="flex items-center gap-4 mb-3">
+      <div className="bg-white/20 rounded-full p-2">
+        <GraduationCap className="w-8 h-8 text-white" />
+      </div>
+      <div>
+        <h3 className="font-bold text-white">Colleges</h3>
+        <p className="text-sm text-white/80">Event showcasing</p>
+      </div>
+    </div>
+    <div className="h-2 bg-white/20 rounded w-3/4 mb-2"></div>
+    <div className="h-2 bg-white/20 rounded w-4/5 mb-2"></div>
+    <div className="h-2 bg-white/20 rounded w-2/3"></div>
+  </div>
+  {/* Company Card */}
+  <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-lg p-6 w-64 border border-[#ff914d]">
+    <div className="flex items-center gap-4 mb-3">
+      <div className="bg-white/20 rounded-full p-2">
+        <Building className="w-8 h-8 text-white" />
+      </div>
+      <div>
+        <h3 className="font-bold text-white">Companies</h3>
+        <p className="text-sm text-white/80">Sponsorship opportunities</p>
+      </div>
+    </div>
+    <div className="h-2 bg-white/20 rounded w-3/4 mb-2"></div>
+    <div className="h-2 bg-white/20 rounded w-4/5 mb-2"></div>
+    <div className="h-2 bg-white/20 rounded w-2/3"></div>
+  </div>
+</div>
+
                     </div>
                   </div>
                 </div>
@@ -1589,6 +1585,91 @@ const HomePage = () => {
           </div>
         </section>
       </main>
+
+     <section className="bg-[#262323] py-12">
+  <div className="max-w-3xl mx-auto px-4 text-center space-y-6">
+    <h3 className="text-2xl font-bold text-white">Get In Touch</h3>
+    
+    {/* Contact Cards */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Social Media Card */}
+      <div className="bg-[#2d2a2a] p-6 rounded-lg shadow-lg border-l-4 border-[#ff914d]">
+        <h4 className="text-white text-lg font-semibold mb-4">Follow Us</h4>
+        <div className="flex justify-center items-center gap-4">
+          <a
+            href="https://www.instagram.com/spon_sync/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-white hover:text-[#ff914d] transition group"
+          >
+            <svg width="24" height="24" fill="currentColor" className="text-[#ff914d] group-hover:scale-110 transition">
+              <path d="M7 2C4.243 2 2 4.243 2 7v6c0 2.757 2.243 5 5 5h6c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm0-2h6c3.866 0 7 3.134 7 7v6c0 3.866-3.134 7-7 7H7c-3.866 0-7-3.134-7-7V7C0 3.134 3.134 0 7 0zm9 4a1 1 0 110 2 1 1 0 010-2zm-5 2a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z" />
+            </svg>
+            <span className="underline">@spon_sync</span>
+          </a>
+        </div>
+      </div>
+
+      {/* Direct Contact Card */}
+      <div className="bg-[#2d2a2a] p-6 rounded-lg shadow-lg border-l-4 border-[#ff914d]">
+        <h4 className="text-white text-lg font-semibold mb-4">Reach Us</h4>
+        <div className="flex flex-col space-y-3">
+          <span className="flex items-center gap-2 text-white">
+            <svg width="20" height="20" fill="currentColor" className="text-[#ff914d]">
+              <path d="M2 3.5A1.5 1.5 0 013.5 2h2A1.5 1.5 0 017 3.5V4a.5.5 0 01-.5.5H3.5A1.5 1.5 0 012 3.5v-1zM2 16.5A1.5 1.5 0 003.5 18h2A1.5 1.5 0 007 16.5V16a.5.5 0 01.5-.5h3a.5.5 0 01.5.5v.5A1.5 1.5 0 0016.5 18h2A1.5 1.5 0 0020 16.5v-1A1.5 1.5 0 0018.5 14h-2A1.5 1.5 0 0015 15.5V16a.5.5 0 01-.5.5h-3A.5.5 0 0111 16v-.5A1.5 1.5 0 009.5 14h-2A1.5 1.5 0 006 15.5v1z" />
+            </svg>
+            <span>
+              Aadi: <a href="tel:9318301351" className="underline hover:text-[#ff914d] transition">9318301351</a>
+            </span>
+          </span>
+          <span className="flex items-center gap-2 text-white">
+            <svg width="20" height="20" fill="currentColor" className="text-[#ff914d]">
+              <path d="M2 3.5A1.5 1.5 0 013.5 2h2A1.5 1.5 0 017 3.5V4a.5.5 0 01-.5.5H3.5A1.5 1.5 0 012 3.5v-1zM2 16.5A1.5 1.5 0 003.5 18h2A1.5 1.5 0 007 16.5V16a.5.5 0 01.5-.5h3a.5.5 0 01.5.5v.5A1.5 1.5 0 0016.5 18h2A1.5 1.5 0 0020 16.5v-1A1.5 1.5 0 0018.5 14h-2A1.5 1.5 0 0015 15.5V16a.5.5 0 01-.5.5h-3A.5.5 0 0111 16v-.5A1.5 1.5 0 009.5 14h-2A1.5 1.5 0 006 15.5v1z" />
+            </svg>
+            <span>
+              Amogh: <a href="tel:8130277940" className="underline hover:text-[#ff914d] transition">8130277940</a>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    {/* Email Contact Form */}
+    <div className="bg-[#2d2a2a] p-6 rounded-lg shadow-lg border-l-4 border-[#ff914d] mt-6">
+      <h4 className="text-white text-lg font-semibold mb-4">Send Us a Message</h4>
+      <form className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input 
+            type="text" 
+            placeholder="Your Name" 
+            className="bg-[#363232] text-white p-3 rounded-md border border-gray-700 focus:border-[#ff914d] focus:outline-none"
+          />
+          <input 
+            type="email" 
+            placeholder="Your Email" 
+            className="bg-[#363232] text-white p-3 rounded-md border border-gray-700 focus:border-[#ff914d] focus:outline-none"
+          />
+        </div>
+        <textarea 
+          placeholder="Your Message" 
+          rows={4} 
+          className="w-full bg-[#363232] text-white p-3 rounded-md border border-gray-700 focus:border-[#ff914d] focus:outline-none"
+        ></textarea>
+        <button 
+          type="submit" 
+          className="bg-[#ff914d] hover:bg-[#e07e3e] text-white font-medium py-2 px-6 rounded-md transition-all transform hover:scale-105"
+        >
+          Send Message
+        </button>
+      </form>
+    </div>
+    
+    <div className="mt-2">
+      <span className="text-white/80 italic">Contact us for sponsorship queries and support.</span>
+    </div>
+  </div>
+</section>
+
 
       {/* Footer */}
       <footer className="bg-[#262323] py-6 text-center text-white text-sm">
