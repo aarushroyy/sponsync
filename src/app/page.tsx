@@ -1233,6 +1233,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+
 import {
   ArrowRight,
   CheckCircle,
@@ -1303,11 +1305,20 @@ const HomePage = () => {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center">
-                <span className="text-2xl font-bold text-white">
-                  Spon<span className="text-[#ff914d]">Sync</span>
-                </span>
-              </Link>
+              <Link href="/" className="flex items-center gap-2">
+  <Image
+    src="/sponsyncLogos.png" // <-- change to your logo path (see below)
+    alt="SponSync Logo"
+    width={40}  // or your preferred size
+    height={40}
+    className="object-contain"
+    priority
+  />
+  <span className="text-2xl font-bold text-white">
+    Spon<span className="text-[#ff914d]">Sync</span>
+  </span>
+</Link>
+
             </div>
 
             {/* Main Navigation - Desktop */}
