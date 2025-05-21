@@ -1346,14 +1346,14 @@ const HomePage = () => {
               </div>
 
               {/* For SPOCs */}
-              <div className="relative group">
+              {/* <div className="relative group">
                 <button className="px-3 py-2 text-white hover:text-[#ff914d] rounded-md flex items-center">
                   For SPOCs <ChevronDown className="ml-1 h-4 w-4" />
                 </button>
                 <div className="absolute left-0 top-full w-48 bg-[#313030] shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <a href="/auth/spoc/login" className="block px-4 py-2 text-white hover:bg-[#ff3131]/30 hover:text-[#ff914d]">Login</a>
                 </div>
-              </div>
+              </div> */}
 
               {/* Features & How It Works */}
               <a href="#features" className="px-3 py-2 text-white hover:text-[#ff914d] rounded-md">
@@ -1631,6 +1631,12 @@ const HomePage = () => {
             <Link href="/auth/spoc/register" passHref>
               <Button size="lg" variant="primary" className="shadow-lg shadow-[#ff914d]/30">
                 Register as SPOC
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/auth/spoc/login" passHref>
+              <Button size="lg" variant="primary" className="shadow-lg shadow-[#ff914d]/30">
+                Login as SPOC
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
