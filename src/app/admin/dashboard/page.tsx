@@ -7,8 +7,8 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, AlertCircle, CheckCircle, X, UserCheck, BuildingIcon, Users, DollarSign, ArrowRightCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, CheckCircle, X, UserCheck, BuildingIcon, Users, DollarSign, ArrowRightCircle } from "lucide-react";
+// import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
@@ -73,11 +73,21 @@ interface Bundle {
   hasSpoc: boolean;
 }
 
+interface ContactQuery {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  status: string;
+  createdAt: string;
+}
+
 interface AdminDashboardData {
   pendingSpocs: SpocUser[];
   colleges: CollegeUser[];
   companies: CompanyUser[];
   campaigns: Campaign[];
+  contactQueries: ContactQuery[];
   stats: {
     totalColleges: number;
     totalCompanies: number;
@@ -276,265 +286,170 @@ export default function AdminDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <p className="ml-2">Loading dashboard...</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-orange-500"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Alert variant="destructive" className="max-w-md">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            {error instanceof Error ? error.message : "Failed to load dashboard"}
-          </AlertDescription>
-        </Alert>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-500 mb-4">Error Loading Dashboard</h2>
+          <p className="text-gray-600">{error instanceof Error ? error.message : 'An error occurred'}</p>
+        </div>
       </div>
     );
   }
 
   const dashboardData: AdminDashboardData = data;
 
-  // Count bundles needing SPOC assignment
-  //const bundlesNeedingAssignment = bundles.filter(b => !b.hasSpoc).length;
-
   return (
     <div className="min-h-screen p-6 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <p className="text-gray-600">Manage colleges, companies, SPOCs and sponsorships</p>
-        </div>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Welcome to SponSync Admin</h1>
+        <p className="text-gray-500 mt-2">Manage your platform's operations and monitor key metrics</p>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-2">
-                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  <BuildingIcon className="h-5 w-5 text-blue-500" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Colleges</p>
-                  <h3 className="text-2xl font-bold">{dashboardData.stats.totalColleges}</h3>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-2">
-                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                  <Users className="h-5 w-5 text-green-500" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Companies</p>
-                  <h3 className="text-2xl font-bold">{dashboardData.stats.totalCompanies}</h3>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-2">
-                <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
-                  <UserCheck className="h-5 w-5 text-red-500" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Pending Approvals</p>
-                  <h3 className="text-2xl font-bold">{dashboardData.stats.pendingApprovals}</h3>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-2">
-                <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                  <DollarSign className="h-5 w-5 text-yellow-500" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Total Revenue</p>
-                  <h3 className="text-2xl font-bold">₹{dashboardData.stats.totalRevenue.toLocaleString()}</h3>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="spocs">SPOCs Approval</TabsTrigger>
-            <TabsTrigger value="bundles">Bundles</TabsTrigger>
-            <TabsTrigger value="colleges">Colleges</TabsTrigger>
-            <TabsTrigger value="companies">Companies</TabsTrigger>
-            <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
+      <div className="mb-6 bg-white rounded-lg shadow-sm">
+        <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="w-full justify-start border-b rounded-none p-0">
+            <div className="flex overflow-x-auto">
+              <TabsTrigger value="overview" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-4">Overview</TabsTrigger>
+              <TabsTrigger value="spocs" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-4">Pending SPOCs</TabsTrigger>
+              <TabsTrigger value="contacts" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-4">Contact Queries</TabsTrigger>
+              <TabsTrigger value="bundles" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-4">Bundles</TabsTrigger>
+              <TabsTrigger value="colleges" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-4">Colleges</TabsTrigger>
+              <TabsTrigger value="companies" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-4">Companies</TabsTrigger>
+              <TabsTrigger value="campaigns" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-4">Campaigns</TabsTrigger>
+            </div>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
-            {/* Pending Approvals Section */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Pending SPOC Approvals</CardTitle>
-                <CardDescription>
-                  SPOCs waiting for review and approval
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {dashboardData.pendingSpocs.length === 0 ? (
-                  <div className="text-center py-4">
-                    <p className="text-gray-500">No pending SPOC approvals</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {dashboardData.pendingSpocs.slice(0, 3).map((spoc) => (
-                      <div key={spoc.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                          <p className="font-medium">{spoc.firstName} {spoc.lastName}</p>
-                          <p className="text-sm text-gray-500">{spoc.email}</p>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedSpoc(spoc);
-                              setIdCardPreviewOpen(true);
-                            }}
-                          >
-                            View ID
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="default"
-                            onClick={() => handleApproveSpoc(spoc.id)}
-                            disabled={processing}
-                          >
-                            Approve
-                          </Button>
-                        </div>
+          <TabsContent value="overview">
+            <div className="space-y-6">
+              {/* Stats Grid */}
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {/* College Stats */}
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center">
+                        <BuildingIcon className="h-6 w-6 text-orange-600" />
                       </div>
-                    ))}
-                  </div>
-                )}
-
-                {dashboardData.pendingSpocs.length > 3 && (
-                  <div className="mt-4 text-center">
-                    <Button variant="outline" onClick={() => setActiveTab("spocs")}>
-                      View All ({dashboardData.pendingSpocs.length})
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Bundle Assignment Section */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Bundles Pending SPOC Assignment</CardTitle>
-                <CardDescription>
-                  Sponsorship bundles waiting for SPOC verification
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {bundlesLoading ? (
-                  <div className="flex justify-center py-4">
-                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-                  </div>
-                ) : (
-                  <>
-                    {!bundles || bundles.length === 0 ? (
-                      <div className="text-center py-4">
-                        <p className="text-gray-500">No bundles pending SPOC assignment</p>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Total Colleges</p>
+                        <h3 className="text-3xl font-bold text-gray-900">{dashboardData.stats.totalColleges}</h3>
                       </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {bundles.filter(b => !b.hasSpoc).slice(0, 3).map((bundle) => (
-                          <div key={bundle.id} className="flex items-center justify-between p-4 border rounded-lg">
-                            <div>
-                              <p className="font-medium">{bundle.name}</p>
-                              <p className="text-sm text-gray-500">{bundle.campaign.company} - {bundle.campaign.name}</p>
-                            </div>
-                            <Button 
-                              size="sm" 
-                              onClick={() => router.push(`/admin/bundles/${bundle.id}/assign-spoc`)}
-                            >
-                              Assign SPOC
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    </div>
+                  </CardContent>
+                </Card>
 
-                    {bundles && bundles.filter(b => !b.hasSpoc).length > 3 && (
-                      <div className="mt-4 text-center">
-                        <Button variant="outline" onClick={() => setActiveTab("bundles")}>
-                          View All ({bundles.filter(b => !b.hasSpoc).length})
-                        </Button>
+                {/* Company Stats */}
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                        <Users className="h-6 w-6 text-blue-600" />
                       </div>
-                    )}
-                  </>
-                )}
-              </CardContent>
-            </Card>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Total Companies</p>
+                        <h3 className="text-3xl font-bold text-gray-900">{dashboardData.stats.totalCompanies}</h3>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            {/* Recent Campaigns Section */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Campaigns</CardTitle>
-                <CardDescription>
-                  Latest sponsorship campaigns
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {dashboardData.campaigns.length === 0 ? (
-                  <div className="text-center py-4">
-                    <p className="text-gray-500">No campaigns available</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {dashboardData.campaigns.slice(0, 3).map((campaign) => (
-                      <div key={campaign.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                          <p className="font-medium">{campaign.name}</p>
-                          <p className="text-sm text-gray-500">{campaign.companyName}</p>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <Badge>{campaign.plan}</Badge>
-                            <Badge variant="outline">{campaign.region}</Badge>
-                          </div>
+                {/* Revenue Stats */}
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
+                        <DollarSign className="h-6 w-6 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Total Revenue</p>
+                        <h3 className="text-3xl font-bold text-gray-900">₹{(dashboardData.stats.totalRevenue / 100000).toFixed(2)}L</h3>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Active Campaigns */}
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
+                        <ArrowRightCircle className="h-6 w-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Active Campaigns</p>
+                        <h3 className="text-3xl font-bold text-gray-900">{dashboardData.stats.activeCampaigns}</h3>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Quick Overview Cards */}
+              <div className="grid gap-6 md:grid-cols-2">
+                {/* Pending Approvals */}
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="text-xl">Pending Approvals</CardTitle>
+                    <CardDescription>SPOC verifications requiring attention</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="h-16 w-16 rounded-full bg-amber-100 flex items-center justify-center">
+                          <UserCheck className="h-8 w-8 text-amber-600" />
                         </div>
                         <div>
-                          <p className="text-lg font-bold">₹{campaign.totalValue.toLocaleString()}</p>
-                          <Badge 
-                            className={
-                              campaign.status === 'ACTIVE' ? "bg-green-100 text-green-800" :
-                              campaign.status === 'COMPLETED' ? "bg-blue-100 text-blue-800" :
-                              "bg-yellow-100 text-yellow-800"
-                            }
-                          >
-                            {campaign.status}
-                          </Badge>
+                          <h4 className="text-4xl font-bold text-gray-900">{dashboardData.stats.pendingApprovals}</h4>
+                          <p className="text-sm text-gray-500">Pending verifications</p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
+                      <Button 
+                        variant="outline"
+                        onClick={() => setActiveTab("spocs")}
+                        className="ml-auto"
+                      >
+                        View All
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
 
-                {dashboardData.campaigns.length > 3 && (
-                  <div className="mt-4 text-center">
-                    <Button variant="outline" onClick={() => setActiveTab("campaigns")}>
-                      View All ({dashboardData.campaigns.length})
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                {/* Recent Activity */}
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="text-xl">Recent Contact Queries</CardTitle>
+                    <CardDescription>Latest inquiries from users</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center">
+                          <BuildingIcon className="h-8 w-8 text-blue-600" />
+                        </div>
+                        <div>
+                          <h4 className="text-4xl font-bold text-gray-900">{dashboardData.contactQueries?.length || 0}</h4>
+                          <p className="text-sm text-gray-500">New messages</p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="outline"
+                        onClick={() => setActiveTab("contacts")}
+                        className="ml-auto"
+                      >
+                        View All
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="spocs" className="space-y-6">
@@ -618,6 +533,54 @@ export default function AdminDashboardPage() {
                   >
                     Go to Bundles
                   </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="contacts">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Recent Contact Queries</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="py-3 px-4 text-left font-medium">Name</th>
+                        <th className="py-3 px-4 text-left font-medium">Email</th>
+                        <th className="py-3 px-4 text-left font-medium">Message</th>
+                        <th className="py-3 px-4 text-left font-medium">Status</th>
+                        <th className="py-3 px-4 text-left font-medium">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dashboardData.contactQueries.map((query) => (
+                        <tr key={query.id} className="border-b">
+                          <td className="py-3 px-4">{query.name}</td>
+                          <td className="py-3 px-4">{query.email}</td>
+                          <td className="py-3 px-4 max-w-md truncate">{query.message}</td>
+                          <td className="py-3 px-4">                            <Badge variant={query.status === "PENDING" ? "secondary" : "default"}>
+                              {query.status}
+                            </Badge>
+                          </td>
+                          <td className="py-3 px-4 text-gray-500">
+                            {new Date(query.createdAt).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      ))}
+                      {dashboardData.contactQueries.length === 0 && (
+                        <tr>
+                          <td colSpan={5} className="py-6 text-center text-gray-500">
+                            No contact queries found
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               </CardContent>
             </Card>

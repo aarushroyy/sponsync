@@ -235,3 +235,13 @@ model SpocAssignment {
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 }
+
+model ContactQuery {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  message   String
+  status    String   @default("PENDING") // PENDING, RESOLVED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -2,27 +2,55 @@ import { GraduationCap, Building, ShieldCheck, Send, Instagram, Phone } from "lu
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function CTASection() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  
-// interface ContactFormData {
-//     name: string;
-//     email: string;
-//     message: string;
-// }
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleSubmit = async () => {
+    if (!name || !email || !message) {
+      toast.error("Please fill all fields");
+      return;
+    }
 
-const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    e.preventDefault();
-    // Handle form submission logic here
-    alert("Message sent! We'll get back to you soon.");
-    setName("");
-    setEmail("");
-    setMessage("");
-};
-  
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const response = await fetch("/api/public/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit contact form");
+      }
+
+      toast.success("Message sent successfully!");
+      // Clear form
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (error) {
+      toast.error("Failed to send message. Please try again.");
+      console.error("Contact form error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       <section className="bg-[#262323] text-white py-20">
@@ -187,9 +215,33 @@ const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>): void => {
                 <Button 
                   onClick={handleSubmit}
                   className="w-full py-3 bg-gradient-to-r from-[#ff3131] to-[#ff914d] hover:opacity-90 text-white font-medium rounded flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
                 >
-                  <Send className="h-5 w-5" />
-                  Send Message
+                  {isSubmitting ? (
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v16a8 8 0 01-8-8z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    <Send className="h-5 w-5" />
+                  )}
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
               </div>
             </div>

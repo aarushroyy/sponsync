@@ -46,6 +46,13 @@ export async function GET(request: Request) {
       },
     });
 
+    // Get contact queries
+    const contactQueries = await prisma.contactQuery.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
     // Get all colleges
     const colleges = await prisma.collegeUser.findMany({
       orderBy: {
@@ -135,7 +142,7 @@ export async function GET(request: Request) {
     const activeCampaigns = await prisma.companyCampaign.count({ where: { status: 'ACTIVE' } });
     const pendingApprovals = pendingSpocs.length;
 
-    // Calculate total revenue (sum of all campaign values)
+    // Get total revenue (sum of all campaign values)
     const totalRevenue = transformedCampaigns.reduce((sum, campaign) => sum + campaign.totalValue, 0);
 
     return NextResponse.json({
@@ -143,6 +150,7 @@ export async function GET(request: Request) {
       colleges: transformedColleges,
       companies,
       campaigns: transformedCampaigns,
+      contactQueries,
       stats: {
         totalColleges,
         totalCompanies,
