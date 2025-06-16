@@ -165,24 +165,24 @@ export default function CompanyLandingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-indigo-100">
-        <div className="absolute top-0 -left-4 h-72 w-72 bg-indigo-100 rounded-full opacity-70 blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 h-96 w-96 bg-indigo-50 rounded-full opacity-70 blur-3xl"></div>
+      <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-orange-100">
+        <div className="absolute top-0 -left-4 h-72 w-72 bg-orange-100 rounded-full opacity-70 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 h-96 w-96 bg-orange-50 rounded-full opacity-70 blur-3xl"></div>
         
         <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="flex flex-col lg:flex-row items-center">
             <div className="lg:w-1/2 lg:pr-12 text-center lg:text-left mb-10 lg:mb-0">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
                 <span className="relative inline-block mb-2">
-                  <span className="absolute inset-x-0 bottom-0 h-6 bg-indigo-100 -z-10 transform skew-x-12"></span>
+                  <span className="absolute inset-x-0 bottom-0 h-6 bg-orange-100 -z-10 transform skew-x-12"></span>
                   <span className="relative z-10">Empower</span>
                 </span>
                 <br />
                 <span>Your Brand with</span>
                 <br />
                 <span className="relative inline-block">
-                  <span className="absolute inset-x-0 bottom-0 h-6 bg-indigo-100 -z-10 transform -skew-x-12"></span>
-                  <span className="relative z-10 text-indigo-600">College Sponsorships</span>
+                  <span className="absolute inset-x-0 bottom-0 h-6 bg-orange-100 -z-10 transform -skew-x-12"></span>
+                  <span className="relative z-10 text-orange-500">Perfect Sponsors</span>
                 </span>
               </h1>
               
@@ -191,13 +191,13 @@ export default function CompanyLandingPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center lg:justify-start">
-                <Button size="lg" asChild className="bg-indigo-600 hover:bg-indigo-700 text-white group">
+                <Button size="lg" asChild className="bg-orange-500 hover:bg-orange-600 text-white group">
                   <Link href="/auth/company/register">
                     Register Now
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" asChild className="border-indigo-600 text-indigo-600 hover:bg-indigo-50 group">
+                <Button variant="outline" size="lg" asChild className="border-orange-500 text-orange-500 hover:bg-orange-50 group">
                   <Link href="/auth/company/login">
                     Sign In
                     <LogIn className="ml-2 h-5 w-5" />
@@ -229,11 +229,11 @@ export default function CompanyLandingPage() {
             
             <div className="lg:w-1/2 relative">
               <div className="relative z-10 bg-white rounded-lg shadow-xl p-2">
-                <div className="relative rounded-lg overflow-hidden bg-gradient-to-br from-indigo-50 to-white">
+                <div className="relative rounded-lg overflow-hidden bg-gradient-to-br from-[#fff5f0] to-white">
                   <div className="aspect-[4/3] w-full relative p-8">
                     <div className="relative h-full flex items-center justify-center">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <Building2 className="h-48 w-48 text-indigo-100" />
+                        <Building2 className="h-48 w-48 text-[#ff914d]" />
                       </div>
                       <div className="relative z-10 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 w-full max-w-md">
                         <h3 className="text-2xl font-bold text-gray-900 mb-4">Sponsor With Confidence</h3>
@@ -242,8 +242,8 @@ export default function CompanyLandingPage() {
                         </p>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="flex items-start">
-                            <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center mr-2 flex-shrink-0">
-                              <Target className="h-4 w-4 text-indigo-600" />
+                            <div className="h-8 w-8 rounded-full bg-[#ff914d]/10 flex items-center justify-center mr-2 flex-shrink-0">
+                              <Target className="h-4 w-4 text-[#ff914d]" />
                             </div>
                             <div>
                               <p className="text-sm font-medium text-gray-900">Targeted Reach</p>
@@ -251,8 +251,8 @@ export default function CompanyLandingPage() {
                             </div>
                           </div>
                           <div className="flex items-start">
-                            <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center mr-2 flex-shrink-0">
-                              <Shield className="h-4 w-4 text-indigo-600" />
+                            <div className="h-8 w-8 rounded-full bg-[#ff914d]/10 flex items-center justify-center mr-2 flex-shrink-0">
+                              <Shield className="h-4 w-4 text-[#ff914d]" />
                             </div>
                             <div>
                               <p className="text-sm font-medium text-gray-900">Verified Results</p>
@@ -267,8 +267,8 @@ export default function CompanyLandingPage() {
               </div>
               
               {/* Decorative elements */}
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-indigo-100 rounded-full"></div>
-              <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-indigo-50 rounded-full"></div>
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-[#ff914d]/10 rounded-full"></div>
+              <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-[#ff3131]/10 rounded-full"></div>
             </div>
           </div>
         </div>
@@ -281,7 +281,7 @@ export default function CompanyLandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               <span className="relative inline-block px-2">
                 Why Companies Choose SponSync
-                <span className="absolute inset-x-0 bottom-2 bg-indigo-100 -z-10 h-4"></span>
+                <span className="absolute inset-x-0 bottom-2 bg-orange-100 -z-10 h-4"></span>
               </span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -295,30 +295,30 @@ export default function CompanyLandingPage() {
                 icon: Target,
                 title: "Brand Exposure",
                 description: "Reach thousands of students through sponsored events",
-                color: "indigo"
+                color: "[#ff914d]"
               },
               {
                 icon: Shield,
                 title: "Ensuring Deliverables",
                 description: "Guarantee your sponsorship benefits are fulfilled",
-                color: "indigo"
+                color: "[#ff914d]"
               },
               {
                 icon: Workflow,
                 title: "Smooth Process",
                 description: "Streamlined communication and execution workflow",
-                color: "indigo"
+                color: "[#ff914d]"
               },
               {
                 icon: BarChart,
                 title: "Quantifiable Data",
                 description: "Track your sponsorship impact with detailed metrics",
-                color: "indigo"
+                color: "[#ff914d]"
               }
             ].map((benefit, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-                <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
-                  <benefit.icon className="h-6 w-6 text-indigo-600" />
+              <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center mb-4">
+                  <benefit.icon className="h-6 w-6 text-orange-500" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{benefit.title}</h3>
                 <p className="text-gray-600">{benefit.description}</p>
@@ -329,13 +329,13 @@ export default function CompanyLandingPage() {
       </section>
       
       {/* How It Works Section */}
-      <section className="py-20 bg-gradient-to-br from-indigo-50 via-white to-indigo-100">
+      <section className="py-20 bg-gradient-to-br from-[#fff5f0] via-white to-[#fff5f0]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               <span className="relative inline-block px-2">
                 How It Works
-                <span className="absolute inset-x-0 bottom-2 bg-indigo-100 -z-10 h-4"></span>
+                <span className="absolute inset-x-0 bottom-2 bg-[#ff914d]/20 -z-10 h-4"></span>
               </span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -345,7 +345,7 @@ export default function CompanyLandingPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
             {/* Connection line */}
-            <div className="hidden lg:block absolute top-24 left-0 w-full h-0.5 bg-indigo-200 z-0"></div>
+            <div className="hidden lg:block absolute top-24 left-0 w-full h-0.5 bg-[#ff914d]/20 z-0"></div>
             
             {[
               {
@@ -380,16 +380,16 @@ export default function CompanyLandingPage() {
               <div key={index} className="relative z-10">
                 <div className="bg-white rounded-xl shadow-md p-6 h-full hover:shadow-lg transition-shadow">
                   <div className="relative mb-4">
-                    <div className="h-16 w-16 rounded-full bg-indigo-100 flex items-center justify-center">
-                      <step.icon className="h-8 w-8 text-indigo-600" />
+                    <div className="h-16 w-16 rounded-full bg-orange-100 flex items-center justify-center">
+                      <step.icon className="h-8 w-8 text-orange-500" />
                     </div>
-                    <div className="absolute top-0 right-0 h-6 w-6 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-bold">
+                    <div className="absolute top-0 right-0 h-6 w-6 rounded-full bg-[#ff3131] flex items-center justify-center text-white text-sm font-bold">
                       {index + 1}
                     </div>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
                   <p className="text-gray-600 mb-4">{step.description}</p>
-                  <Link href={step.link} className="text-indigo-600 font-medium flex items-center hover:underline">
+                  <Link href={step.link} className="text-orange-500 font-medium flex items-center hover:underline">
                     {step.action} <ChevronRight className="h-4 w-4 ml-1" />
                   </Link>
                 </div>
@@ -406,7 +406,7 @@ export default function CompanyLandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               <span className="relative inline-block px-2">
                 Featured College Events
-                <span className="absolute inset-x-0 bottom-2 bg-indigo-100 -z-10 h-4"></span>
+                <span className="absolute inset-x-0 bottom-2 bg-[#ff914d]/20 -z-10 h-4"></span>
               </span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -416,7 +416,7 @@ export default function CompanyLandingPage() {
           
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <Loader2 className="h-12 w-12 text-indigo-600 animate-spin mb-4" />
+              <Loader2 className="h-12 w-12 text-[#ff914d] animate-spin mb-4" />
               <p className="text-gray-600">Loading available events...</p>
             </div>
           ) : error ? (
@@ -429,7 +429,7 @@ export default function CompanyLandingPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {collegeEvents.map((event) => (
                   <Card key={event.id} className="overflow-hidden h-full flex flex-col hover:shadow-lg transition-shadow">
-                    <div className="h-48 bg-gradient-to-br from-indigo-50 to-white relative flex items-center justify-center">
+                    <div className="h-48 bg-gradient-to-br from-[#fff5f0] to-white relative flex items-center justify-center">
                       {event.posterUrl ? (
                         <img 
                           src={event.posterUrl} 
@@ -438,7 +438,7 @@ export default function CompanyLandingPage() {
                         />
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center p-4">
-                          <Building2 className="h-16 w-16 text-indigo-300 mb-2" />
+                          <Building2 className="h-16 w-16 text-[#ff914d] mb-2" />
                           <h3 className="text-xl font-bold text-center text-gray-700">{event.college.eventName}</h3>
                         </div>
                       )}
@@ -473,7 +473,7 @@ export default function CompanyLandingPage() {
                     <CardFooter className="border-t p-4">
                       <Link 
                         href="/auth/company/login" 
-                        className="text-indigo-600 hover:text-indigo-800 hover:underline text-sm font-medium flex items-center w-full justify-center"
+                        className="text-[#ff914d] hover:text-[#ff3131] hover:underline text-sm font-medium flex items-center w-full justify-center"
                       >
                         Sign in to view details <ExternalLink className="ml-1 h-3 w-3" />
                       </Link>
@@ -489,7 +489,7 @@ export default function CompanyLandingPage() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button 
                     asChild
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                    className="bg-[#ff3131] hover:bg-[#ff914d] text-white"
                   >
                     <Link href="/auth/company/register">
                       Register for Full Access
@@ -498,7 +498,7 @@ export default function CompanyLandingPage() {
                   <Button 
                     variant="outline"
                     asChild
-                    className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
+                    className="border-[#ff914d] text-[#ff914d] hover:bg-[#ff914d]/10"
                   >
                     <Link href="/auth/company/login">
                       Sign In
@@ -518,7 +518,7 @@ export default function CompanyLandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               <span className="relative inline-block px-2">
                 Ready to boost your brand presence?
-                <span className="absolute inset-x-0 bottom-2 bg-indigo-500 opacity-30 -z-10 h-4"></span>
+                <span className="absolute inset-x-0 bottom-2 bg-[#ff914d]/30 -z-10 h-4"></span>
               </span>
             </h2>
             <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
@@ -529,7 +529,7 @@ export default function CompanyLandingPage() {
               <Button 
                 size="lg" 
                 asChild
-                className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                className="bg-orange-500 hover:bg-orange-600 text-white"
               >
                 <Link href="/auth/company/register">
                   Register Now
@@ -539,7 +539,7 @@ export default function CompanyLandingPage() {
                 size="lg" 
                 variant="outline" 
                 asChild
-                className="border-white text-white hover:bg-white/10"
+                className="border-orange-500 text-orange-500 hover:bg-orange-50"
               >
                 <Link href="/auth/company/login">
                   Sign In

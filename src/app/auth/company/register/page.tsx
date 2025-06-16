@@ -1,224 +1,3 @@
-// "use client";
-
-// import { useState } from "react";
-// import { useMutation } from "@tanstack/react-query";
-// import { useRouter } from "next/navigation";
-// import { Alert, AlertDescription } from "@/components/ui/alert";
-// import { Button } from "@/components/ui/button";
-// import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import Link from "next/link";
-// import { Loader2, Building2 } from "lucide-react";
-// import { RegisterData } from "@/app/types/companyAuth";
-// import { validateEmail, validatePassword, validateRequired } from "@/app/lib/authValidation";
-
-// export default function CompanyRegisterPage() {
-//   const router = useRouter();
-//   const [formData, setFormData] = useState<RegisterData>({
-//     email: "",
-//     password: "",
-//     personName: "",
-//     position: "",
-//     companyName: "",
-//     phone: "",
-//   });
-//   const [errors, setErrors] = useState<Partial<RegisterData>>({});
-
-//   const mutation = useMutation({
-//     mutationFn: async (data: RegisterData) => {
-//       const res = await fetch("/api/auth/company/register", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data),
-//       });
-//       if (!res.ok) {
-//         const err = await res.json();
-//         throw new Error(err.message || "Registration failed");
-//       }
-//       return res.json();
-//     },
-//     onSuccess: () => {
-//       router.push("/auth/company/login");
-//     },
-//   });
-
-//   const validateForm = (): boolean => {
-//     const newErrors: Partial<RegisterData> = {};
-//     const emailError = validateEmail(formData.email);
-//     const passwordError = validatePassword(formData.password);
-    
-//     if (emailError) newErrors.email = emailError;
-//     if (passwordError) newErrors.password = passwordError;
-    
-//     Object.keys(formData).forEach((key) => {
-//       if (key !== 'email' && key !== 'password') {
-//         const error = validateRequired(formData[key as keyof RegisterData], key);
-//         if (error) newErrors[key as keyof RegisterData] = error;
-//       }
-//     });
-    
-//     setErrors(newErrors);
-//     return Object.keys(newErrors).length === 0;
-//   };
-
-//   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (validateForm()) {
-//       mutation.mutate(formData);
-//     }
-//   };
-
-//   // const formFields = [
-//   //   { name: 'email', label: 'Email', type: 'email' },
-//   //   { name: 'password', label: 'Password', type: 'password' },
-//   //   { name: 'personName', label: 'Person Name', type: 'text' },
-//   //   { name: 'position', label: 'Position', type: 'text' },
-//   //   { name: 'companyName', label: 'Company Name', type: 'text' },
-//   //   { name: 'phone', label: 'Phone', type: 'tel' },
-//   // ];
-
-// //   return (
-// //     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-// //       <Card className="w-full max-w-md">
-// //         <CardHeader>
-// //           <CardTitle className="text-2xl font-bold text-center">Company Registration</CardTitle>
-// //         </CardHeader>
-// //         <CardContent>
-// //           <form onSubmit={handleSubmit} className="space-y-4">
-// //             {formFields.map((field) => (
-// //               <div key={field.name} className="space-y-2">
-// //                 <Label htmlFor={field.name}>{field.label}</Label>
-// //                 <Input
-// //                   id={field.name}
-// //                   name={field.name}
-// //                   type={field.type}
-// //                   value={formData[field.name as keyof RegisterData]}
-// //                   onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
-// //                   className={errors[field.name as keyof RegisterData] ? "border-red-500" : ""}
-// //                 />
-// //                 {errors[field.name as keyof RegisterData] && (
-// //                   <p className="text-sm text-red-500">{errors[field.name as keyof RegisterData]}</p>
-// //                 )}
-// //               </div>
-// //             ))}
-
-// //             <Button
-// //               type="submit"
-// //               className="w-full"
-// //               disabled={mutation.status === "pending"}
-// //             >
-// //               {mutation.status === "pending" ? (
-// //                 <>
-// //                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-// //                   Registering...
-// //                 </>
-// //               ) : (
-// //                 "Register"
-// //               )}
-// //             </Button>
-// //           </form>
-
-// //           {mutation.status === "error" && (
-// //             <Alert variant="destructive" className="mt-4">
-// //               <AlertDescription>
-// //                 {mutation.error?.message || "An error occurred"}
-// //               </AlertDescription>
-// //             </Alert>
-// //           )}
-// //         </CardContent>
-// //         <CardFooter className="justify-center">
-// //           <p className="text-sm text-gray-600">
-// //             Already have an account?{" "}
-// //             <Link href="/auth/company/login" className="text-blue-600 hover:underline">
-// //               Login here
-// //             </Link>
-// //           </p>
-// //         </CardFooter>
-// //       </Card>
-// //     </div>
-// //   );
-// // }
-
-// return (
-//   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-//     <Card className="w-full max-w-md shadow-lg border-0">
-//       <CardHeader className="space-y-1">
-//         <div className="w-full flex justify-center">
-//           <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center mb-2">
-//             <Building2 className="h-6 w-6 text-indigo-600" />
-//           </div>
-//         </div>
-//         <CardTitle className="text-2xl font-bold text-center text-gray-900">
-//           Corporate Registration
-//         </CardTitle>
-//         <CardDescription className="text-center text-gray-500">
-//           Join our network of premium sponsors
-//         </CardDescription>
-//       </CardHeader>
-//       <CardContent>
-//         <form onSubmit={handleSubmit} className="space-y-4">
-//           {[
-//             { id: 'email', label: 'Work Email', type: 'email', placeholder: 'name@company.com' },
-//             { id: 'password', label: 'Password', type: 'password' },
-//             { id: 'personName', label: 'Representative Name', type: 'text' },
-//             { id: 'position', label: 'Your Position', type: 'text' },
-//             { id: 'companyName', label: 'Legal Company Name', type: 'text' },
-//             { id: 'phone', label: 'Business Phone', type: 'tel' },
-//           ].map((field) => (
-//             <div key={field.id} className="space-y-2">
-//               <Label htmlFor={field.id} className="text-gray-700">{field.label}</Label>
-//               <Input
-//                 id={field.id}
-//                 type={field.type}
-//                 value={formData[field.id as keyof RegisterData]}
-//                 onChange={(e) => setFormData(prev => ({ ...prev, [field.id]: e.target.value }))}
-//                 className={`focus-visible:ring-indigo-500 ${errors[field.id as keyof RegisterData] ? "border-red-500" : ""}`}
-//                 placeholder={field.placeholder}
-//               />
-//               {errors[field.id as keyof RegisterData] && (
-//                 <p className="text-sm text-red-500 mt-1">{errors[field.id as keyof RegisterData]}</p>
-//               )}
-//             </div>
-//           ))}
-
-//           <Button
-//             type="submit"
-//             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
-//             disabled={mutation.isPending}
-//           >
-//             {mutation.isPending ? (
-//               <>
-//                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-//                 Establishing Partnership...
-//               </>
-//             ) : "Complete Registration"}
-//           </Button>
-//         </form>
-
-//         {mutation.isError && (
-//           <Alert variant="destructive" className="mt-4">
-//             <AlertDescription>{mutation.error.message}</AlertDescription>
-//           </Alert>
-//         )}
-//       </CardContent>
-//       <CardFooter className="justify-center border-t pt-4">
-//         <p className="text-sm text-gray-600">
-//           Existing partner?{" "}
-//           <Link
-//             href="/auth/company/login"
-//             className="font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
-//           >
-//             Access your account
-//           </Link>
-//         </p>
-//       </CardFooter>
-//     </Card>
-//   </div>
-// );
-// }
-
-
 "use client";
 
 import { useState } from "react";
@@ -353,15 +132,15 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         <div key={index} className="flex items-center">
           <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors ${
             index + 1 < currentStep 
-              ? "bg-indigo-600 text-white" 
+              ? "bg-[#ff914d] text-white" 
               : index + 1 === currentStep 
-                ? "bg-indigo-600 text-white" 
+                ? "bg-[#ff914d] text-white" 
                 : "bg-gray-200 text-gray-600"
           }`}>
             {index + 1 < currentStep ? <CheckCircle className="h-4 w-4" /> : index + 1}
           </div>
           {index < totalSteps - 1 && (
-            <div className={`h-1 w-12 ${index + 1 < currentStep ? "bg-indigo-600" : "bg-gray-200"}`} />
+            <div className={`h-1 w-12 ${index + 1 < currentStep ? "bg-[#ff914d]" : "bg-gray-200"}`} />
           )}
         </div>
       ))}
@@ -369,13 +148,13 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-orange-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Info Box - Left side */}
-        <div className="hidden md:flex flex-col bg-white p-8 rounded-lg shadow-lg border border-indigo-100">
+        <div className="hidden md:flex flex-col bg-white p-8 rounded-lg shadow-lg border border-orange-100">
           <div className="flex items-center mb-6">
-            <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center mr-4">
-              <Building2 className="h-6 w-6 text-indigo-600" />
+            <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center mr-4">
+              <Building2 className="h-6 w-6 text-[#ff914d]" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900">Become a Corporate Partner</h2>
           </div>
@@ -389,26 +168,26 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
               <h3 className="text-lg font-medium text-gray-800">Why Partner With Us?</h3>
               <ul className="space-y-3 mt-4">
                 <li className="flex items-start">
-                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-indigo-100 text-indigo-600 mr-2 flex-shrink-0">1</span>
+                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-[#ff914d] text-white mr-2 flex-shrink-0">1</span>
                   <span>Access to curated college events based on your target demographics</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-indigo-100 text-indigo-600 mr-2 flex-shrink-0">2</span>
+                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-[#ff914d] text-white mr-2 flex-shrink-0">2</span>
                   <span>Standardized sponsorship packages with clear deliverables</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-indigo-100 text-indigo-600 mr-2 flex-shrink-0">3</span>
+                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-[#ff914d] text-white mr-2 flex-shrink-0">3</span>
                   <span>Verified implementation reports from independent SPOCs</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-indigo-100 text-indigo-600 mr-2 flex-shrink-0">4</span>
+                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-[#ff914d] text-white mr-2 flex-shrink-0">4</span>
                   <span>Comprehensive analytics dashboard to track ROI</span>
                 </li>
               </ul>
             </div>
             
-            <div className="mt-8 p-4 bg-indigo-50 rounded-lg border border-indigo-100">
-              <h3 className="text-lg font-medium text-indigo-700">How It Works</h3>
+            <div className="mt-8 p-4 bg-orange-50 rounded-lg border border-orange-100">
+              <h3 className="text-lg font-medium text-[#ff914d]">How It Works</h3>
               <ol className="mt-2 space-y-2 text-sm text-gray-700">
                 <li className="flex items-start">
                   <span className="font-medium mr-2">1.</span>
@@ -439,8 +218,8 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         <Card className="w-full shadow-lg border-none">
           <CardHeader className="space-y-1">
             <div className="w-full flex justify-center">
-              <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center mb-2">
-                <Building2 className="h-6 w-6 text-indigo-600" />
+              <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center mb-2">
+                <Building2 className="h-6 w-6 text-[#ff914d]" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-center text-gray-900">
@@ -458,13 +237,13 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                 // Step 1: Account Information
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-gray-700">Work Email <span className="text-red-500">*</span></Label>
+                    <Label htmlFor="email" className="text-gray-700">Primary Email <span className="text-red-500">*</span></Label>
                     <Input
                       id="email"
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      className={`focus-visible:ring-indigo-500 ${errors.email ? "border-red-500" : ""}`}
+                      className={`focus-visible:ring-[#ff914d] ${errors.email ? "border-red-500" : ""}`}
                       placeholder="name@company.com"
                     />
                     {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
@@ -478,7 +257,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                         type={showPassword ? "text" : "password"}
                         value={formData.password}
                         onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                        className={`focus-visible:ring-indigo-500 pr-10 ${errors.password ? "border-red-500" : ""}`}
+                        className={`focus-visible:ring-[#ff914d] pr-10 ${errors.password ? "border-red-500" : ""}`}
                         placeholder="••••••••"
                       />
                       <button
@@ -499,7 +278,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                   <Button 
                     type="button" 
                     onClick={nextStep}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors mt-6"
+                    className="w-full bg-[#ff3131] hover:bg-[#ff914d] text-white font-medium py-2 px-4 rounded-md transition-colors mt-6"
                   >
                     Continue <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -514,7 +293,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                       type="text"
                       value={formData.personName}
                       onChange={(e) => setFormData(prev => ({ ...prev, personName: e.target.value }))}
-                      className={`focus-visible:ring-indigo-500 ${errors.personName ? "border-red-500" : ""}`}
+                      className={`focus-visible:ring-[#ff914d] ${errors.personName ? "border-red-500" : ""}`}
                       placeholder="Your full name"
                     />
                     {errors.personName && <p className="text-sm text-red-500 mt-1">{errors.personName}</p>}
@@ -527,7 +306,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                       type="text"
                       value={formData.position}
                       onChange={(e) => setFormData(prev => ({ ...prev, position: e.target.value }))}
-                      className={`focus-visible:ring-indigo-500 ${errors.position ? "border-red-500" : ""}`}
+                      className={`focus-visible:ring-[#ff914d] ${errors.position ? "border-red-500" : ""}`}
                       placeholder="e.g. Marketing Manager"
                     />
                     {errors.position && <p className="text-sm text-red-500 mt-1">{errors.position}</p>}
@@ -540,7 +319,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                       type="text"
                       value={formData.companyName}
                       onChange={(e) => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
-                      className={`focus-visible:ring-indigo-500 ${errors.companyName ? "border-red-500" : ""}`}
+                      className={`focus-visible:ring-[#ff914d] ${errors.companyName ? "border-red-500" : ""}`}
                       placeholder="Your company's legal name"
                     />
                     {errors.companyName && <p className="text-sm text-red-500 mt-1">{errors.companyName}</p>}
@@ -553,7 +332,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                      className={`focus-visible:ring-indigo-500 ${errors.phone ? "border-red-500" : ""}`}
+                      className={`focus-visible:ring-[#ff914d] ${errors.phone ? "border-red-500" : ""}`}
                       placeholder="+91 9876543210"
                     />
                     {errors.phone && <p className="text-sm text-red-500 mt-1">{errors.phone}</p>}
@@ -568,7 +347,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                         type="email"
                         value={formData.workEmail}
                         onChange={(e) => setFormData(prev => ({ ...prev, workEmail: e.target.value }))}
-                        className={`focus-visible:ring-indigo-500 ${errors.workEmail ? "border-red-500" : ""}`}
+                        className={`focus-visible:ring-[#ff914d] ${errors.workEmail ? "border-red-500" : ""}`}
                         placeholder="your.name@company.com"
                       />
                       {errors.workEmail && <p className="text-sm text-red-500 mt-1">{errors.workEmail}</p>}
@@ -583,7 +362,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                         type="text"
                         value={formData.linkedIn}
                         onChange={(e) => setFormData(prev => ({ ...prev, linkedIn: e.target.value }))}
-                        className={`focus-visible:ring-indigo-500 ${errors.linkedIn ? "border-red-500" : ""}`}
+                        className={`focus-visible:ring-[#ff914d] ${errors.linkedIn ? "border-red-500" : ""}`}
                         placeholder="linkedin.com/in/yourprofile"
                       />
                       {errors.linkedIn && <p className="text-sm text-red-500 mt-1">{errors.linkedIn}</p>}
@@ -613,7 +392,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                   <div className="flex flex-col space-y-3 mt-6">
                     <Button
                       type="submit"
-                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                      className="w-full bg-[#ff3131] hover:bg-[#ff914d] text-white font-medium py-2 px-4 rounded-md transition-colors"
                       disabled={mutation.isPending}
                     >
                       {mutation.isPending ? (
@@ -627,7 +406,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full border-indigo-600 text-indigo-600 hover:bg-indigo-50"
+                      className="w-full border-[#ff914d] text-[#ff914d] hover:bg-orange-50"
                       onClick={prevStep}
                     >
                       Back to Previous Step
@@ -648,7 +427,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
               Existing partner?{" "}
               <Link
                 href="/auth/company/login"
-                className="font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
+                className="font-medium text-[#ff914d] hover:text-[#ff3131] hover:underline"
               >
                 Access your account
               </Link>

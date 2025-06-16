@@ -579,10 +579,10 @@ export default function CollegeRegisterPage() {
                   <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-orange-100 text-orange-600 mr-2 flex-shrink-0">3</span>
                   <span>Receive verified implementation reports</span>
                 </li>
-                <li className="flex items-start">
+                {/* <li className="flex items-start">
                   <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-orange-100 text-orange-600 mr-2 flex-shrink-0">4</span>
                   <span>Track sponsorship metrics and fulfillment</span>
-                </li>
+                </li> */}
               </ul>
             </div>
             
