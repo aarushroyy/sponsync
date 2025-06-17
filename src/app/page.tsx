@@ -661,15 +661,15 @@
 //                 }
 //               ].map((step, index) => (
 //                 <div key={index} className="relative z-10">
-//                   <div className="bg-white rounded-xl shadow-md p-6 h-full hover:shadow-lg transition-shadow">
-//                     <div className="bg-orange-50 rounded-full w-16 h-16 flex items-center justify-center mb-4 relative">
+//                   <div className="bg-white rounded-xl shadow-md p-6 h-full flex flex-col hover:shadow-lg transition-shadow">
+//                     <div className="bg-orange-50 rounded-full w-16 h-16 flex items-center justify-center mb-4 relative flex-shrink-0">
 //                       <step.icon className="h-8 w-8 text-orange-500" />
 //                       <div className="absolute top-0 right-0 bg-orange-500 text-white h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold -mt-1 -mr-1">
 //                         {step.step}
 //                       </div>
 //                     </div>
-//                     <h3 className="text-2xl font-bold text-gray-900 mb-2">{step.title}</h3>
-//                     <p className="text-gray-600">{step.description}</p>
+//                     <h3 className="text-2xl font-bold text-gray-900 mb-2 flex-shrink-0">{step.title}</h3>
+//                     <p className="text-gray-600 flex-grow">{step.description}</p>
 //                   </div>
 //                 </div>
 //               ))}
@@ -2051,8 +2051,8 @@ const HomePage = () => {
       
       {/* Step 4: Analyze */}
       <div className="relative z-10">
-        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-xl p-[2px]">
-          <div className="bg-[#313030] rounded-xl p-6 h-full hover:bg-[#383535] transition-colors">
+        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] min-h-[290px] rounded-xl shadow-xl p-[2px]">
+          <div className="bg-[#313030] rounded-xl min-h-[290px] p-6 h-full hover:bg-[#383535] transition-colors">
             <div className="bg-[#1e1c1c]/50 rounded-full w-16 h-16 flex items-center justify-center mb-4 relative backdrop-blur-sm">
               <svg className="h-8 w-8 text-[#ff914d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 20V10M12 20V4M6 20v-6"></path>

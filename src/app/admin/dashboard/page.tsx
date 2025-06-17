@@ -666,9 +666,7 @@ export default function AdminDashboardPage() {
                     Manage college registrations and events
                   </CardDescription>
                 </div>
-                <Button onClick={() => router.push("/admin/colleges/new")}>
-                  Add College
-                </Button>
+                
               </CardHeader>
               <CardContent>
                 {dashboardData.colleges.length === 0 ? (
@@ -728,9 +726,7 @@ export default function AdminDashboardPage() {
                     Manage company registrations and campaigns
                   </CardDescription>
                 </div>
-                <Button onClick={() => router.push("/admin/companies/new")}>
-                  Add Company
-                </Button>
+                
               </CardHeader>
               <CardContent>
                 {dashboardData.companies.length === 0 ? (
