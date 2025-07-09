@@ -46,7 +46,7 @@ const generateToken = (userId: string): string => {
 const sendVerificationEmail = async (userId: string, email: string): Promise<void> => {
   const token = generateToken(userId);
   // Use the appropriate deployment URL, not localhost
-  const verificationLink = `${process.env.BASE_URL}/api/auth/verify-email?token=${token}`;
+  const verificationLink = `sponsync.com/api/auth/verify-email?token=${token}`;
 
   await transporter.sendMail({
     to: email,
