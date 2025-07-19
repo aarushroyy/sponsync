@@ -9,6 +9,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
+    // Validate LinkedIn format
+    const linkedInRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[\w-]+\/?$|^[\w._%+-]+@[\w.-]+\.[A-Za-z]{2,}$/;
+    if (!linkedInRegex.test(linkedIn)) {
+      return NextResponse.json({ message: 'Invalid LinkedIn URL format. Please provide a valid LinkedIn profile URL or email format.' }, { status: 400 });
+    }
+
     console.log('Registration request body:', body);
     const user = await companyAuthService.register(body);
     console.log('User created successfully:', user.id);
@@ -19,6 +25,10 @@ export async function POST(request: Request) {
     }, { status: 201 });
   } catch (error: unknown) {
     console.error('Registration error:', error);
+    
+    if (error instanceof Error && error.message === 'Invalid LinkedIn URL or email format') {
+      return NextResponse.json({ message: error.message }, { status: 400 });
+    }
     
     // If error has a code property (like from Prisma), we can check it:
     if (

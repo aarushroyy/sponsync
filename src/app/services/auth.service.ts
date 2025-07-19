@@ -218,45 +218,46 @@ const sendVerificationEmail = async (userId: string, email: string): Promise<voi
 };
 
 export const companyAuthService = {
-  async register(data: {
+  async register(userData: {
     email: string;
     password: string;
     personName: string;
     position: string;
     companyName: string;
     phone: string;
+    workEmail: string;
+    linkedIn: string;
   }) {
-    try {
-      console.log('Processing registration for:', data.email);
-      
-      const hashedPassword = await hashPassword(data.password);
-      const user = await prisma.companyUser.create({
-        data: {
-          email: data.email,
-          password: hashedPassword,
-          personName: data.personName,
-          position: data.position,
-          companyName: data.companyName,
-          phone: data.phone,
-          isVerified: true
-        },
-      });
-
-      console.log('User created with ID:', user.id);
-      
-      try {
-        await sendVerificationEmail(user.id, user.email);
-        console.log('Verification email sent to:', user.email);
-      } catch (emailError) {
-        console.error('Email sending failed:', emailError);
-        // Continue even if email fails
-      }
-
-      return user;
-    } catch (error: unknown) {
-      console.error('Company registration error:', error);
-      throw error;
+    // Validate LinkedIn format (accept linkedin.com URLs or email-like format)
+    const linkedInRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[\w-]+\/?$|^[\w._%+-]+@[\w.-]+\.[A-Za-z]{2,}$/;
+    if (!linkedInRegex.test(userData.linkedIn)) {
+      throw new Error('Invalid LinkedIn URL or email format');
     }
+
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+    const user = await prisma.companyUser.create({
+      data: {
+        email: userData.email,
+        password: hashedPassword,
+        personName: userData.personName,
+        position: userData.position,
+        companyName: userData.companyName,
+        phone: userData.phone,
+        workEmail: userData.workEmail,
+        linkedin: userData.linkedIn,
+        isVerified: false,
+      },
+    });
+
+    // Send verification email
+    try {
+      await sendVerificationEmail(user.id, user.email);
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+    }
+
+    return user;
   },
 
   async login(email: string, password: string) {
