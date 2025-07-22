@@ -1,6 +1,7 @@
 // src/app/api/public/preview-events/route.ts
 import { NextResponse } from 'next/server';
 import prisma from '@/app/lib/prisma';
+import { EVENT_TYPES } from '@/app/lib/eventTypes';
 
 // This API endpoint returns a limited set of college event data for public preview
 // It's intended for marketing pages to show potential sponsors what's available
@@ -64,7 +65,7 @@ export async function GET() {
     const fallbackEvents = [
       {
         id: "preview-1",
-        eventType: "Technical Fest",
+        eventType: EVENT_TYPES[3], // "Tech Fest"
         region: "NORTH",
         posterUrl: null,
         college: {
@@ -76,7 +77,7 @@ export async function GET() {
       },
       {
         id: "preview-2",
-        eventType: "Cultural Fest",
+        eventType: EVENT_TYPES[4], // "Cultural Fest"
         region: "SOUTH",
         posterUrl: null,
         college: {
@@ -88,7 +89,7 @@ export async function GET() {
       },
       {
         id: "preview-3",
-        eventType: "Hackathon",
+        eventType: EVENT_TYPES[2], // "Hackathon"
         region: "WEST",
         posterUrl: null,
         college: {
@@ -100,7 +101,7 @@ export async function GET() {
       },
       {
         id: "preview-4",
-        eventType: "Sports Event",
+        eventType: EVENT_TYPES[5], // "Sports Event"
         region: "EAST",
         posterUrl: null,
         college: {
@@ -112,7 +113,7 @@ export async function GET() {
       },
       {
         id: "preview-5",
-        eventType: "Workshop",
+        eventType: EVENT_TYPES[0], // "Club Workshop & Seminar"
         region: "NORTH",
         posterUrl: null,
         college: {
@@ -124,7 +125,7 @@ export async function GET() {
       },
       {
         id: "preview-6",
-        eventType: "Seminar",
+        eventType: EVENT_TYPES[0], // "Club Workshop & Seminar"
         region: "SOUTH",
         posterUrl: null,
         college: {

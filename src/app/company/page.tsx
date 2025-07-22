@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { EVENT_TYPES } from "@/app/lib/eventTypes";
 
 // Types to match the existing college events data structure
 interface CollegeEvent {
@@ -62,7 +63,7 @@ export default function CompanyLandingPage() {
         setCollegeEvents([
           {
             id: "1",
-            eventType: "Technical Fest",
+            eventType: EVENT_TYPES[3], // "Tech Fest"
             region: "NORTH",
             posterUrl: null,
             college: {
@@ -74,7 +75,7 @@ export default function CompanyLandingPage() {
           },
           {
             id: "2",
-            eventType: "Cultural Fest",
+            eventType: EVENT_TYPES[4], // "Cultural Fest"
             region: "SOUTH",
             posterUrl: null,
             college: {
@@ -86,7 +87,7 @@ export default function CompanyLandingPage() {
           },
           {
             id: "3",
-            eventType: "Hackathon",
+            eventType: EVENT_TYPES[2], // "Hackathon"
             region: "WEST",
             posterUrl: null,
             college: {
@@ -98,7 +99,7 @@ export default function CompanyLandingPage() {
           },
           {
             id: "4",
-            eventType: "Sports Event",
+            eventType: EVENT_TYPES[5], // "Sports Event"
             region: "EAST",
             posterUrl: null,
             college: {
@@ -110,7 +111,7 @@ export default function CompanyLandingPage() {
           },
           {
             id: "5",
-            eventType: "Workshop",
+            eventType: EVENT_TYPES[0], // "Club Workshop & Seminar"
             region: "NORTH",
             posterUrl: null,
             college: {
@@ -122,7 +123,7 @@ export default function CompanyLandingPage() {
           },
           {
             id: "6",
-            eventType: "Seminar",
+            eventType: EVENT_TYPES[0], // "Club Workshop & Seminar"
             region: "SOUTH",
             posterUrl: null,
             college: {

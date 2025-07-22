@@ -631,6 +631,7 @@ import { Loader2, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { SimpleMultiSelect } from "@/components/ui/simple-multi-select";
+import { EVENT_TYPE_OPTIONS } from "@/app/lib/eventTypes";
 //import { Progress } from "@/components/ui/progress";
 
 // Import types from lib/types to maintain compatibility
@@ -817,15 +818,7 @@ export default function StartCampaignPage() {
   const [features, setFeatures] = useState<FeatureInput[]>([]);
   const [preSelectedCollegeId, setPreSelectedCollegeId] = useState<string | null>(null);
 
-  const eventTypeOptions = [
-    { value: "Tech Fest", label: "Tech Fest" },
-    { value: "Cultural Fest", label: "Cultural Fest" },
-    { value: "Sports Meet", label: "Sports Meet" },
-    { value: "Conference", label: "Conference" },
-    { value: "Workshop", label: "Workshop" },
-    { value: "Seminar", label: "Seminar" },
-    { value: "Hackathon", label: "Hackathon" }
-  ];
+  const eventTypeOptions = EVENT_TYPE_OPTIONS;
 
   // Define the budget ranges
 const budgetRanges = [

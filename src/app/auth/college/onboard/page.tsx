@@ -607,6 +607,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { PackageAmountOptions } from "@/app/types/package";
 import { toast } from "sonner";
+import { EVENT_TYPES } from "@/app/lib/eventTypes";
 
 export default function CollegeOnboarding() {
   const router = useRouter();
@@ -1163,13 +1164,12 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                         <SelectTrigger id="eventType" className="focus:ring-orange-500">
                           <SelectValue placeholder="Select Event Type" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Workshop">Workshop</SelectItem>
-                          <SelectItem value="Seminar">Seminar</SelectItem>
-                          <SelectItem value="Hackathon">Hackathon</SelectItem>
-                          <SelectItem value="Tech Fest">Tech Fest</SelectItem>
-                          <SelectItem value="Cultural Fest">Cultural Fest</SelectItem>
-                          <SelectItem value="Sports Event">Sports Event</SelectItem>
+                        <SelectContent className="max-h-[300px] overflow-y-auto">
+                          {EVENT_TYPES.map((eventType) => (
+                            <SelectItem key={eventType} value={eventType}>
+                              {eventType}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
