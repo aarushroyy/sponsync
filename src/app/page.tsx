@@ -1993,8 +1993,8 @@ const HomePage = () => {
       
       {/* Step 1: Register */}
       <div className="relative z-10">
-        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-xl p-[2px]">
-          <div className="bg-[#313030] rounded-xl p-6 h-full hover:bg-[#383535] transition-colors">
+        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-xl p-[2px] h-[300px]">
+          <div className="bg-[#313030] rounded-xl p-6 h-full hover:bg-[#383535] transition-colors flex flex-col">
             <div className="bg-[#1e1c1c]/50 rounded-full w-16 h-16 flex items-center justify-center mb-4 relative backdrop-blur-sm">
               <svg className="h-8 w-8 text-[#ff914d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
@@ -2007,15 +2007,15 @@ const HomePage = () => {
               </div>
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Register</h3>
-            <p className="text-gray-300">Colleges and companies create accounts and complete their profiles with relevant information.</p>
+            <p className="text-gray-300 flex-1">Colleges and companies create accounts and complete their profiles with relevant information.</p>
           </div>
         </div>
       </div>
       
       {/* Step 2: Connect */}
       <div className="relative z-10">
-        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-xl p-[2px]">
-          <div className="bg-[#313030] rounded-xl p-6 h-full hover:bg-[#383535] transition-colors">
+        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-xl p-[2px] h-[300px]">
+          <div className="bg-[#313030] rounded-xl p-6 h-full hover:bg-[#383535] transition-colors flex flex-col">
             <div className="bg-[#1e1c1c]/50 rounded-full w-16 h-16 flex items-center justify-center mb-4 relative backdrop-blur-sm">
               <svg className="h-8 w-8 text-[#ff914d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="7" y1="17" x2="17" y2="7"></line>
@@ -2026,15 +2026,15 @@ const HomePage = () => {
               </div>
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Connect</h3>
-            <p className="text-gray-300">Colleges create packages, companies browse and select events that match their sponsorship goals.</p>
+            <p className="text-gray-300 flex-1">Colleges create packages, companies browse and select events that match their sponsorship goals.</p>
           </div>
         </div>
       </div>
       
       {/* Step 3: Verify */}
       <div className="relative z-10">
-        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-xl p-[2px]">
-          <div className="bg-[#313030] rounded-xl p-6 h-full hover:bg-[#383535] transition-colors">
+        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-xl p-[2px] h-[300px]">
+          <div className="bg-[#313030] rounded-xl p-6 h-full hover:bg-[#383535] transition-colors flex flex-col">
             <div className="bg-[#1e1c1c]/50 rounded-full w-16 h-16 flex items-center justify-center mb-4 relative backdrop-blur-sm">
               <svg className="h-8 w-8 text-[#ff914d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M20 7L9 18l-5-5M12 1v7l2 2"></path>
@@ -2044,15 +2044,15 @@ const HomePage = () => {
               </div>
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Verify</h3>
-            <p className="text-gray-300">SPOCs verify implementation and track sponsorship metrics with photo evidence.</p>
+            <p className="text-gray-300 flex-1">SPOCs verify implementation and track sponsorship metrics with photo evidence.</p>
           </div>
         </div>
       </div>
       
       {/* Step 4: Analyze */}
       <div className="relative z-10">
-        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] min-h-[290px] rounded-xl shadow-xl p-[2px]">
-          <div className="bg-[#313030] rounded-xl min-h-[290px] p-6 h-full hover:bg-[#383535] transition-colors">
+        <div className="bg-gradient-to-br from-[#ff3131] to-[#ff914d] rounded-xl shadow-xl p-[2px] h-[300px]">
+          <div className="bg-[#313030] rounded-xl p-6 h-full hover:bg-[#383535] transition-colors flex flex-col">
             <div className="bg-[#1e1c1c]/50 rounded-full w-16 h-16 flex items-center justify-center mb-4 relative backdrop-blur-sm">
               <svg className="h-8 w-8 text-[#ff914d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 20V10M12 20V4M6 20v-6"></path>
@@ -2062,7 +2062,7 @@ const HomePage = () => {
               </div>
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Analyse</h3>
-            <p className="text-gray-300">Both parties receive reports and analytics on performance and ROI.</p>
+            <p className="text-gray-300 flex-1">Both parties receive reports and analytics on performance and ROI.</p>
           </div>
         </div>
       </div>
