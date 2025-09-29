@@ -284,6 +284,35 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleUpdateQueryStatus = async (queryId: string, status: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Not authenticated");
+      }
+      
+      const res = await fetch(`/api/admin/contacts/${queryId}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+      
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Failed to update query status");
+      }
+      
+      toast.success("Query status updated successfully");
+      refetch();
+    } catch (error) {
+      console.error("Error updating query status:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to update query status");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -553,7 +582,7 @@ export default function AdminDashboardPage() {
                         <th className="py-3 px-4 text-left font-medium">Name</th>
                         <th className="py-3 px-4 text-left font-medium">Email</th>
                         <th className="py-3 px-4 text-left font-medium">Message</th>
-                        <th className="py-3 px-4 text-left font-medium">Status</th>
+                        <th className="py-3 px-4 text-left font-medium">Status / Action</th>
                         <th className="py-3 px-4 text-left font-medium">Date</th>
                       </tr>
                     </thead>
@@ -562,10 +591,25 @@ export default function AdminDashboardPage() {
                         <tr key={query.id} className="border-b">
                           <td className="py-3 px-4">{query.name}</td>
                           <td className="py-3 px-4">{query.email}</td>
-                          <td className="py-3 px-4 max-w-md truncate">{query.message}</td>
-                          <td className="py-3 px-4">                            <Badge variant={query.status === "PENDING" ? "secondary" : "default"}>
-                              {query.status}
-                            </Badge>
+                          <td className="py-3 px-4 max-w-md">
+                            <div className="break-words whitespace-pre-wrap">{query.message}</div>
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center space-x-2">
+                              <Badge variant={query.status === "PENDING" ? "secondary" : "default"}>
+                                {query.status}
+                              </Badge>
+                              {query.status === "PENDING" && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleUpdateQueryStatus(query.id, "RESOLVED")}
+                                  className="h-6 px-2 text-xs"
+                                >
+                                  ✓
+                                </Button>
+                              )}
+                            </div>
                           </td>
                           <td className="py-3 px-4 text-gray-500">
                             {new Date(query.createdAt).toLocaleDateString()}
