@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Building, Mail, Phone, User, MapPin, Calendar, Award } from "lucide-react";
+import { ArrowLeft, Building, Mail, Phone, User, MapPin, Calendar, Award, Clock } from "lucide-react";
 
 interface PackageMetric {
   id: string;
@@ -36,8 +36,11 @@ interface CollegeOnboarding {
   id: string;
   region: string;
   eventType: string;
+  eventStartDate: string | null;
+  eventEndDate: string | null;
   posterUrl: string | null;
   totalBudgetGoal: number | null;
+  createdAt: string;
   packageConfigs: PackageConfig[];
 }
 
@@ -179,6 +182,34 @@ export default function CollegeDetailsPage() {
                     <Phone className="h-4 w-4 text-gray-500" />
                     <span className="text-sm">{college.phone}</span>
                   </div>
+                  <div className="border-t pt-3 mt-3">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Clock className="h-4 w-4 text-blue-500" />
+                      <span className="text-sm font-medium text-blue-700">Registration Timeline</span>
+                    </div>
+                    <div className="ml-6 space-y-1">
+                      <p className="text-xs text-gray-600">
+                        Registered: {new Date(college.createdAt).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'short', 
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                      {college.CollegeOnboarding && (
+                        <p className="text-xs text-gray-600">
+                          Onboarded: {new Date(college.CollegeOnboarding.createdAt).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 {college.CollegeOnboarding && (
                   <div className="space-y-4">
@@ -190,6 +221,29 @@ export default function CollegeDetailsPage() {
                       <Award className="h-4 w-4 text-gray-500" />
                       <span className="text-sm">Event Type: {college.CollegeOnboarding.eventType}</span>
                     </div>
+                    {college.CollegeOnboarding.eventStartDate && (
+                      <div className="flex items-center space-x-2">
+                        <Calendar className="h-4 w-4 text-green-500" />
+                        <span className="text-sm">
+                          <span className="font-medium text-green-700">Event Date:</span>{" "}
+                          {new Date(college.CollegeOnboarding.eventStartDate).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                          {college.CollegeOnboarding.eventEndDate && (
+                            <span>
+                              {" "}-{" "}
+                              {new Date(college.CollegeOnboarding.eventEndDate).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                              })}
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

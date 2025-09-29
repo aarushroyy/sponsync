@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
@@ -34,6 +34,8 @@ interface CollegeUser {
   phone: string;
   region: string;
   eventType: string;
+  eventStartDate: string | null;
+  eventEndDate: string | null;
   posterUrl: string | null;
   isVerified: boolean;
   onboardingComplete: boolean;
@@ -100,6 +102,18 @@ interface AdminDashboardData {
 }
 
 export default function AdminDashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-orange-500"></div>
+      </div>
+    }>
+      <AdminDashboardContent />
+    </Suspense>
+  );
+}
+
+function AdminDashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
@@ -732,6 +746,25 @@ export default function AdminDashboardPage() {
                         <div>
                           <p className="font-medium">{college.collegeName}</p>
                           <p className="text-sm">{college.eventName}</p>
+                          {college.eventStartDate && (
+                            <div className="flex items-center mt-1">
+                              <svg className="w-3 h-3 text-blue-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                              </svg>
+                              <span className="text-xs text-blue-600 font-medium">
+                                {new Date(college.eventStartDate).toLocaleDateString('en-US', { 
+                                  month: 'short', 
+                                  day: 'numeric' 
+                                })}
+                                {college.eventEndDate && 
+                                  ` - ${new Date(college.eventEndDate).toLocaleDateString('en-US', { 
+                                    month: 'short', 
+                                    day: 'numeric' 
+                                  })}`
+                                }
+                              </span>
+                            </div>
+                          )}
                           <div className="flex items-center space-x-2 mt-1">
                             <Badge>{college.region}</Badge>
                             <Badge variant="outline">{college.eventType}</Badge>

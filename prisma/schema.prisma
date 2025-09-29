@@ -79,6 +79,8 @@ model CollegeOnboarding {
   collegeId       String          @unique
   region          Region
   eventType       String
+  eventStartDate  DateTime?       // Optional event start date (required in frontend)
+  eventEndDate    DateTime?       // Optional event end date
   posterUrl       String?         // Added to store Supabase URL
   totalBudgetGoal Int?
   packageConfigs  PackageConfig[]

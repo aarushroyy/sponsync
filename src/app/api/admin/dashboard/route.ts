@@ -63,6 +63,8 @@ export async function GET(request: Request) {
           select: {
             region: true,
             eventType: true,
+            eventStartDate: true,
+            eventEndDate: true,
             posterUrl: true,
           },
         },
@@ -70,7 +72,7 @@ export async function GET(request: Request) {
     });
 
     // Transform college data for the frontend
-    const transformedColleges = colleges.map(college => ({
+    const transformedColleges = colleges.map((college) => ({
       id: college.id,
       name: college.name,
       collegeName: college.collegeName,
@@ -79,6 +81,8 @@ export async function GET(request: Request) {
       phone: college.phone,
       region: college.CollegeOnboarding?.region || 'Not specified',
       eventType: college.CollegeOnboarding?.eventType || 'Not specified',
+      eventStartDate: college.CollegeOnboarding?.eventStartDate || null,
+      eventEndDate: college.CollegeOnboarding?.eventEndDate || null,
       posterUrl: college.CollegeOnboarding?.posterUrl || null,
       isVerified: college.isVerified,
       onboardingComplete: college.onboardingComplete,

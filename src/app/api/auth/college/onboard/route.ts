@@ -219,6 +219,8 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     const regionRaw = formData.get('region');
     const eventType = formData.get('eventType') as string | null;
+    const eventStartDate = formData.get('eventStartDate') as string | null;
+    const eventEndDate = formData.get('eventEndDate') as string | null;
     const totalBudgetGoal = formData.get('totalBudgetGoal') as string | null;
     const posterFile = formData.get('poster') as File | null;
 
@@ -228,8 +230,24 @@ export async function POST(request: Request): Promise<NextResponse> {
         ? (regionRaw as Region)
         : null;
 
-    if (!region || !eventType) {
-      return new NextResponse(JSON.stringify({ message: 'Missing or invalid required fields' }), { status: 400 });
+    if (!region || !eventType || !eventStartDate) {
+      return new NextResponse(JSON.stringify({ message: 'Missing or invalid required fields: region, eventType, and eventStartDate are required' }), { status: 400 });
+    }
+
+    // Validate date format
+    const startDate = new Date(eventStartDate);
+    const endDate = eventEndDate ? new Date(eventEndDate) : null;
+    
+    if (isNaN(startDate.getTime())) {
+      return new NextResponse(JSON.stringify({ message: 'Invalid event start date' }), { status: 400 });
+    }
+    
+    if (endDate && isNaN(endDate.getTime())) {
+      return new NextResponse(JSON.stringify({ message: 'Invalid event end date' }), { status: 400 });
+    }
+    
+    if (endDate && endDate <= startDate) {
+      return new NextResponse(JSON.stringify({ message: 'Event end date must be after start date' }), { status: 400 });
     }
 
     // Process package configurations
@@ -270,6 +288,8 @@ export async function POST(request: Request): Promise<NextResponse> {
         collegeId: decoded.userId,
         region,
         eventType,
+        eventStartDate: startDate,
+        eventEndDate: endDate,
         posterUrl,
         totalBudgetGoal: totalBudgetGoal ? parseInt(totalBudgetGoal) : null,
       },

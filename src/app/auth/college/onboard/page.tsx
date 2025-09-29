@@ -595,7 +595,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-// import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Loader2, Upload, CheckCircle, ArrowRight, ArrowLeft } from "lucide-react";
@@ -652,6 +652,8 @@ export default function CollegeOnboarding() {
   const [formData, setFormData] = useState({
     region: "",
     eventType: "",
+    eventStartDate: "",
+    eventEndDate: "",
     poster: null as File | null,
     packageTier: PackageTier.BRONZE,
     // totalBudgetGoal: "50000", // Default total budget goal
@@ -809,7 +811,7 @@ export default function CollegeOnboarding() {
 
   const validateCurrentStep = (): boolean => {
     if (currentStep === 1) {
-      return !!formData.region && !!formData.eventType;
+      return !!formData.region && !!formData.eventType && !!formData.eventStartDate;
     } else if (currentStep === 2) {
       return !!formData.poster && !posterError;
     }
@@ -822,6 +824,10 @@ export default function CollegeOnboarding() {
       const formDataToSend = new FormData();
       formDataToSend.append("region", data.region);
       formDataToSend.append("eventType", data.eventType);
+      formDataToSend.append("eventStartDate", data.eventStartDate);
+      if (data.eventEndDate) {
+        formDataToSend.append("eventEndDate", data.eventEndDate);
+      }
       
       if (data.poster) {
         formDataToSend.append("poster", data.poster);
@@ -1190,6 +1196,33 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                           ))}
                         </SelectContent>
                       </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="eventStartDate">Event Start Date *</Label>
+                      <Input
+                        id="eventStartDate"
+                        type="date"
+                        value={formData.eventStartDate}
+                        onChange={(e) => setFormData(prev => ({ ...prev, eventStartDate: e.target.value }))}
+                        className="focus:ring-orange-500"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="eventEndDate">Event End Date (Optional)</Label>
+                      <Input
+                        id="eventEndDate"
+                        type="date"
+                        value={formData.eventEndDate}
+                        onChange={(e) => setFormData(prev => ({ ...prev, eventEndDate: e.target.value }))}
+                        className="focus:ring-orange-500"
+                        min={formData.eventStartDate || undefined}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        💡 Add an end date for multi-day events (festivals, conferences, etc.)
+                      </p>
                     </div>
                   </div>
                   
