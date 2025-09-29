@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -101,6 +101,7 @@ interface AdminDashboardData {
 
 export default function AdminDashboardPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedSpoc, setSelectedSpoc] = useState<SpocUser | null>(null);
   const [idCardPreviewOpen, setIdCardPreviewOpen] = useState(false);
@@ -177,7 +178,13 @@ export default function AdminDashboardPage() {
     if (!token || role !== "admin") {
       router.push("/auth/admin/login");
     }
-  }, [router]);
+    
+    // Handle tab parameter from URL
+    const tabParam = searchParams.get("tab");
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [router, searchParams]);
 
   const handleApproveSpoc = async (spocId: string) => {
     setProcessing(true);
@@ -739,15 +746,6 @@ export default function AdminDashboardPage() {
                           </div>
                         </div>
                         <div className="flex space-x-2 mt-4 md:mt-0">
-                          {college.posterUrl && (
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => window.open(college.posterUrl!, '_blank')}
-                            >
-                              View Poster
-                            </Button>
-                          )}
                           <Button 
                             size="sm" 
                             variant="outline"

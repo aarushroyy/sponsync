@@ -115,10 +115,10 @@ export default function CollegeDetailsPage() {
           <Button
             variant="ghost"
             className="mb-4"
-            onClick={() => router.push("/admin/dashboard")}
+            onClick={() => router.push("/admin/dashboard?tab=colleges")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            Back to Colleges
           </Button>
           <Card>
             <CardContent className="py-10">
@@ -139,10 +139,10 @@ export default function CollegeDetailsPage() {
         <div className="flex items-center justify-between mb-6">
           <Button
             variant="ghost"
-            onClick={() => router.push("/admin/dashboard")}
+            onClick={() => router.push("/admin/dashboard?tab=colleges")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            Back to Colleges
           </Button>
           <div className="flex gap-2">
             <Badge variant={college.isVerified ? "default" : "secondary"}>
