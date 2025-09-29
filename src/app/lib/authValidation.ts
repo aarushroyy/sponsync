@@ -82,10 +82,30 @@ export function validateWorkEmail(email: string): string | null {
   return null;
 }
 
+// Helper function to normalize LinkedIn URL
+export function normalizeLinkedInUrl(link: string): string {
+  if (!link) return link;
+  
+  // Remove trailing slash if present
+  const trimmed = link.replace(/\/$/, '');
+  
+  // Remove protocol and www if present
+  const cleaned = trimmed.replace(/^https?:\/\/(www\.)?/, '');
+  
+  return cleaned;
+}
+
 export function validateLinkedIn(link: string): string | null {
   if (!link) return "LinkedIn profile is required";
-  if (!/^linkedin\.com\/in\/[A-Za-z0-9\-_.]+$/.test(link)) {
-    return "Please enter a valid LinkedIn profile (linkedin.com/in/...)";
+  
+  const normalized = normalizeLinkedInUrl(link);
+  
+  // Allow both full URLs and just the linkedin.com/in/... format
+  const linkedInRegex = /^linkedin\.com\/in\/[A-Za-z0-9\-_.]+$/;
+  
+  if (!linkedInRegex.test(normalized)) {
+    return "Please enter a valid LinkedIn profile (linkedin.com/in/username)";
   }
+  
   return null;
 }

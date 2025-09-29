@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { companyAuthService } from '@/app/services/auth.service';
+import { normalizeLinkedInUrl } from '@/app/lib/authValidation';
 
 export async function POST(request: Request) {
   try {
@@ -9,14 +10,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
-    // Validate LinkedIn format
-    const linkedInRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[\w-]+\/?$|^[\w._%+-]+@[\w.-]+\.[A-Za-z]{2,}$/;
-    if (!linkedInRegex.test(linkedIn)) {
-      return NextResponse.json({ message: 'Invalid LinkedIn URL format. Please provide a valid LinkedIn profile URL or email format.' }, { status: 400 });
+    // Normalize LinkedIn URL to handle trailing slashes and protocol variations
+    const normalizedLinkedIn = normalizeLinkedInUrl(linkedIn);
+
+    // Validate normalized LinkedIn format
+    const linkedInRegex = /^linkedin\.com\/in\/[\w-]+$/;
+    if (!linkedInRegex.test(normalizedLinkedIn)) {
+      return NextResponse.json({ message: 'Invalid LinkedIn URL format. Please provide a valid LinkedIn profile URL (linkedin.com/in/username).' }, { status: 400 });
     }
 
     console.log('Registration request body:', body);
-    const user = await companyAuthService.register(body);
+    
+    // Pass the normalized LinkedIn URL to the service
+    const registrationData = {
+      ...body,
+      linkedIn: normalizedLinkedIn
+    };
+    
+    const user = await companyAuthService.register(registrationData);
     console.log('User created successfully:', user.id);
     
     return NextResponse.json({ 

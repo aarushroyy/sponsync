@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Loader2, Building2, Eye, EyeOff, ArrowRight, CheckCircle } from "lucide-react";
 import { RegisterData } from "@/app/types/companyAuth";
-import { validateEmail, validatePassword, validateName, validatePhone, validateRequired,validateLinkedIn, validateWorkEmail } from "@/app/lib/authValidation";
+import { validateEmail, validatePassword, validateName, validatePhone, validateRequired,validateLinkedIn, validateWorkEmail, normalizeLinkedInUrl } from "@/app/lib/authValidation";
 import { PasswordStrength } from "@/components/password-strength";
 
 export default function CompanyRegisterPage() {
@@ -108,6 +108,9 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   if (currentStep < totalSteps) {
     nextStep();
   } else if (validateForm(currentStep)) {
+    // Normalize LinkedIn URL before sending
+    const normalizedLinkedIn = normalizeLinkedInUrl(formData.linkedIn);
+    
     // Fix: Instead of destructuring and not using the variable,
     // create a new object with only the properties we need
     const dataToSend = {
@@ -117,8 +120,8 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       position: formData.position,
       companyName: formData.companyName,
       phone: formData.phone,
-      workEmail: formData.workEmail,    // NEW
-      linkedIn: formData.linkedIn,     // NEW
+      workEmail: formData.workEmail,
+      linkedIn: normalizedLinkedIn,    // Use normalized LinkedIn URL
     };
     
     mutation.mutate(dataToSend);
@@ -363,9 +366,12 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                         value={formData.linkedIn}
                         onChange={(e) => setFormData(prev => ({ ...prev, linkedIn: e.target.value }))}
                         className={`focus-visible:ring-[#ff914d] ${errors.linkedIn ? "border-red-500" : ""}`}
-                        placeholder="linkedin.com/in/yourprofile"
+                        placeholder="linkedin.com/in/yourprofile or https://linkedin.com/in/yourprofile/"
                       />
                       {errors.linkedIn && <p className="text-sm text-red-500 mt-1">{errors.linkedIn}</p>}
+                      <p className="text-xs text-gray-500">
+                        You can paste your full LinkedIn profile URL or just linkedin.com/in/yourprofile
+                      </p>
                     </div>
                   
                   

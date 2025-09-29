@@ -228,12 +228,7 @@ export const companyAuthService = {
     workEmail: string;
     linkedIn: string;
   }) {
-    // Validate LinkedIn format (accept linkedin.com URLs or email-like format)
-    const linkedInRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[\w-]+\/?$|^[\w._%+-]+@[\w.-]+\.[A-Za-z]{2,}$/;
-    if (!linkedInRegex.test(userData.linkedIn)) {
-      throw new Error('Invalid LinkedIn URL or email format');
-    }
-
+    // LinkedIn URL is already normalized and validated in the API route
     const hashedPassword = await bcrypt.hash(userData.password, 10);
 
     const user = await prisma.companyUser.create({
