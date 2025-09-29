@@ -34,6 +34,7 @@ interface CollegeUser {
   phone: string;
   region: string;
   eventType: string;
+  posterUrl: string | null;
   isVerified: boolean;
   onboardingComplete: boolean;
   createdAt: string;
@@ -732,9 +733,21 @@ export default function AdminDashboardPage() {
                             ) : (
                               <Badge variant="outline" className="text-yellow-800">Incomplete</Badge>
                             )}
+                            {college.posterUrl && (
+                              <Badge variant="outline" className="text-blue-600 border-blue-300">Poster Available</Badge>
+                            )}
                           </div>
                         </div>
                         <div className="flex space-x-2 mt-4 md:mt-0">
+                          {college.posterUrl && (
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => window.open(college.posterUrl!, '_blank')}
+                            >
+                              View Poster
+                            </Button>
+                          )}
                           <Button 
                             size="sm" 
                             variant="outline"

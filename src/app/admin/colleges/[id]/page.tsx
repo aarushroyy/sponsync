@@ -196,6 +196,35 @@ export default function CollegeDetailsPage() {
             </CardContent>
           </Card>
 
+          {/* Event Poster */}
+          {college.CollegeOnboarding?.posterUrl && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Event Poster</CardTitle>
+                <CardDescription>College event poster</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-center">
+                  <div className="max-w-md w-full">
+                    <img 
+                      src={college.CollegeOnboarding.posterUrl} 
+                      alt="Event Poster" 
+                      className="w-full h-auto rounded-lg shadow-lg"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.parentElement?.querySelector('.error-fallback') as HTMLElement;
+                        if (fallback) fallback.style.display = 'block';
+                      }}
+                    />
+                    <div className="error-fallback hidden text-center py-4 text-gray-500">
+                      Unable to load poster image
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Assigned SPOCs */}
           <Card>
             <CardHeader>

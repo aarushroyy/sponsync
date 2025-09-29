@@ -63,6 +63,7 @@ export async function GET(request: Request) {
           select: {
             region: true,
             eventType: true,
+            posterUrl: true,
           },
         },
       },
@@ -78,6 +79,7 @@ export async function GET(request: Request) {
       phone: college.phone,
       region: college.CollegeOnboarding?.region || 'Not specified',
       eventType: college.CollegeOnboarding?.eventType || 'Not specified',
+      posterUrl: college.CollegeOnboarding?.posterUrl || null,
       isVerified: college.isVerified,
       onboardingComplete: college.onboardingComplete,
       createdAt: college.createdAt,
