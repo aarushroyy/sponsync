@@ -17,7 +17,7 @@ export default function MaintenancePage() {
         {/* Logo */}
         <div className="mb-8 flex items-center justify-center gap-2">
           <Image
-            src="/sponsyncLogos.png"
+            src="/sponsyncLogos.png?v=1"
             alt="SponSync Logo"
             width={40}
             height={40}
